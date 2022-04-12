@@ -1,0 +1,9 @@
+# ide config
+.idea
+*.iml
+
+# self build
+/_build
+/deps
+/log
+/test
