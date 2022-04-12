@@ -1,18 +1,13 @@
-defmodule Exmock do
-  @moduledoc """
-  Documentation for `Exmock`.
-  """
+defmodule Exmock.App do
+  use Application
 
-  @doc """
-  Hello world.
+  @impl true
+  def start(_, _) do
+    children =
+      [
+        {Exmock.Server, []}
+      ]
 
-  ## Examples
-
-      iex> Exmock.hello()
-      :world
-
-  """
-  def hello do
-    :world
+      Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
