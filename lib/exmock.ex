@@ -5,7 +5,10 @@ defmodule Exmock.App do
   def start(_, _) do
     children =
       [
-        {Exmock.Server, []}
+        # mysql repo
+        {Exmock.Repo, []},
+        # maru server
+        {Exmock.Server, []},
       ]
 
       Supervisor.start_link(children, strategy: :one_for_one)

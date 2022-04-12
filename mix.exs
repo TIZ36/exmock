@@ -24,6 +24,8 @@ defmodule Exmock.MixProject do
     [
       {:maru, "~> 0.13.2"},
       {:plug_cowboy, "~> 2.3"},
+      {:ecto_sql, "~> 3.0" },
+      {:myxql, ">= 0.2.0"},
 
       # Optional dependency, you can also add your own json_library dependency
       # and config with `config :maru, json_library, YOUR_JSON_LIBRARY`.
