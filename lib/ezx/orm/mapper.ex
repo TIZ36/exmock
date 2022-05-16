@@ -8,9 +8,14 @@ defmodule Ezx.Orm.Mapper do
   defmacro __using__(_opts) do
     quote do
       import unquote(__MODULE__)
+
+      def no_validate(_po) do
+        true
+      end
     end
   end
 
+  # mapper with validator func
   defmacro mapper(mapper_name, [validator: func, po: po_type], do: block) when is_binary(mapper_name) do
     func_name = String.to_atom(mapper_name)
     quote do
@@ -22,6 +27,13 @@ defmodule Ezx.Orm.Mapper do
             {:fail, "validate fail"}
         end
       end
+    end
+  end
+
+  # mapper without validator func
+  defmacro mapper(mapper_name, [po: po_type], do: block) when is_binary(mapper_name) do
+    quote do
+      mapper(unquote(mapper_name), [validator: &__MODULE__.no_validate/1, po: unquote(po_type)], do: unquote(block))
     end
   end
 end

@@ -3,12 +3,16 @@ defmodule TestMapper do
   import Ecto.Query, warn: false
 
   # orMapper to insert into db
-  mapper "insert_test_by_id", [validator: &__MODULE__.validate_insert_test_by_id/1, po: %TestPo.Test{} = po] do
+  mapper "insert_test_by_id", validator: &__MODULE__.validate_insert_test_by_id/1, po: %TestPo.Test{} = po do
+    Exmock.Repo.insert(po)
+  end
+
+  mapper "insert_test_by_id_no", po: %TestPo.Test{} = po do
     Exmock.Repo.insert(po)
   end
 
   def validate_insert_test_by_id(%TestPo.Test{} = input) do
     IO.inspect(input, label: "do validate")
-    true
+    false
   end
 end
