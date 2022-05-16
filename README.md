@@ -6,15 +6,15 @@ a game mocker server for im-erlang by using elixir-maru framework
 ### ecto
 #### to use
 1. update mysql connection config in config.exs
-2. run `ecto.create`
-3. run `ecto.migrate`
+2. run `mix ecto.create`
+3. run `mix ecto.migrate`
 
 ### to create new model
 1. new model file xx.ex
 2. declare your schema 
-3. run `ecto.gen.migration #{table_name}`
+3. run `mix ecto.gen.migration #{table_name}`
 4. edit auto-gen migration file under /priv/repo/migrations
-5. run `ecto.migrate`
+5. run `mix ecto.migrate`
 
 ## Add your files
 

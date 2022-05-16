@@ -4,8 +4,8 @@ defmodule Exmock.Model.GameMockServer.GroupInfo do
 
   @primary_key false
   schema "group_info" do
-    field(:id, :integer, primary_key: true)
-    field(:data, :binary)
+    field :id, :integer, primary_key: true
+    field :data, :binary
 
     timestamps()
   end
@@ -13,13 +13,13 @@ defmodule Exmock.Model.GameMockServer.GroupInfo do
   def query_group(group_id) do
     query =
       from group_info in "group_info",
-        where: group_info.id == ^group_id,
-        select: %{
-          group_id: group_info.id,
-          group_data: group_info.data
-        }
+           where: group_info.id == ^group_id,
+           select: %{
+             group_id: group_info.id,
+             group_data: group_info.data
+           }
 
-      Exmock.Repo.one(query)
+    Exmock.Repo.one(query)
   end
 
   def insert_group_info(id, data_bin) do
