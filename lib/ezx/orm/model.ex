@@ -20,6 +20,10 @@ defmodule Ezx.Orm.Model do
       def new() do
         %@data_po{}
       end
+
+      def table() do
+        @table
+      end
     end
   end
 
@@ -39,10 +43,11 @@ defmodule Ezx.Orm.Model do
         |> String.to_atom()
 
       @data_po po_model
+      @table Macro.underscore(table_name)
       defmodule po_model do
         use Ecto.Schema
         @primary_key false
-        schema String.downcase(table_name), do: unquote(fields)
+        schema Macro.underscore(table_name), do: unquote(fields)
 
         def hi() do
           __MODULE__

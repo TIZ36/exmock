@@ -6,6 +6,6 @@ defmodule Exmock.Switcher.Gmock do
       json(conn, %{ hello: :world })
     end
 
-    mount Exmock.Api.User
+    mount Exmock.ChatController
   end
 end
