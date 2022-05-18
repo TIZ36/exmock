@@ -1,21 +1,35 @@
-defmodule ErrorCode do
-  defmacro ecode(code, msg: msg) do
-    quote do
-      %{
-        err: %{
-          code: unquote(code),
-          msg: unquote(msg)
-        }
-      }
-    end
-  end
+defmodule Exmock.Common.ErrorCode do
+
   defmacro __using__(_version) do
     quote do
       import unquote(__MODULE__)
+      use Ezx.Common.Norm
 
-      @unknown_err ecode 999, msg: "unknown err"
-      @ecode_not_found ecode 1000, msg: "can not found"
+      @ok code 996, msg: "ok"
+      @unknown_err code 999, msg: "unknown err"
+      @ecode_not_found code 1000, msg: "can not found"
 
+    end
+  end
+
+  defmacro ok(data: data) do
+    quote do
+      @ok
+      |> Map.merge(%{data: unquote(data)})
+    end
+  end
+
+  defmacro fail(err_code, data: data) do
+    quote do
+      unquote(err_code)
+      |> Map.merge(%{data: unquote(data)})
+
+    end
+  end
+
+  defmacro fail(err_code) do
+    quote do
+      fail(unquote(err_code), data: "")
     end
   end
 end

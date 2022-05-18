@@ -1,7 +1,9 @@
 defmodule Exmock.ChatController do
   use Maru.Router
-  use ErrorCode
+
+  use Exmock.Common.ErrorCode
   alias Exmock.Service.User, as: UserService
+
 
   params do
     requires :uid, type: Integer
@@ -23,16 +25,6 @@ defmodule Exmock.ChatController do
     IO.inspect(resp)
     conn
     |> put_status(200)
-    |> json(success(resp))
-  end
-
-  defp success({:ok, data}) do
-    resp
-    |> Map.put(:code, 200)
-    |> Map.put_new(:data, %{})
-  end
-  defp success(_) do
-    @unknown_err
-    |> Map.merge(%{code: 200, data: %{}})
+    |> json(resp)
   end
 end

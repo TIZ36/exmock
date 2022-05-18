@@ -1,15 +1,12 @@
 defmodule Exmock.Service.User do
-  use ErrorCode
+  use Exmock.Common.ErrorCode
 
   def handle("basicInfo" = _api, %{uid: uid} = _params) do
     case UserInfoMapper.query_user(uid) do
-      a ->
-       3
       nil ->
-        @ecode_not_found
+        fail(@ecode_not_found)
       re ->
-        re
-
+        ok(data: re)
     end
   end
 end

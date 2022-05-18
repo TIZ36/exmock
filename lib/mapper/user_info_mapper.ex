@@ -12,9 +12,10 @@ defmodule UserInfoMapper do
            }
 
     case Exmock.Repo.one(query) do
-      nil -> nil
-      %{data: bin} = re_map ->
-        %{re_map | data: :erlang.binary_to_term(bin)}
+      %{data: bin} = re_map when is_binary(bin) ->
+        :erlang.binary_to_term(bin)
+      _ ->
+        nil
     end
   end
 
