@@ -1,12 +1,22 @@
 defmodule Exmock.Service.User do
   use Exmock.Common.ErrorCode
+  use Ezx.Service
 
-  def handle("basicInfo" = _api, %{uid: uid} = _params) do
-    case UserInfoMapper.query_user(uid) do
+  @doc """
+  ref to https://lilithgames.feishu.cn/wiki/wikcn4N21LbFGIV2lBmFAZ4W4gb#JcWEbg
+  Return:
+    %{
+      "cur_stage" : integer(),
+      "maincity_level" : integer()
+    }
+  """
+  service "basicInfo", %{uid: uid} = params do
+    case UserBasicInfoMapper.query_user(uid) do
       nil ->
         fail(@ecode_not_found)
       re ->
         ok(data: re)
     end
   end
+
 end

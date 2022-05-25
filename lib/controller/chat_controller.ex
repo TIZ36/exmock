@@ -1,8 +1,9 @@
 defmodule Exmock.ChatController do
   use Maru.Router
-
+  use Ezx.Service
   use Exmock.Common.ErrorCode
   alias Exmock.Service.User, as: UserService
+
 
 
   params do
@@ -10,21 +11,25 @@ defmodule Exmock.ChatController do
     requires :type, type: String
   end
   get "chat" do
-
-    #    IO.inspect(conn)
-    IO.inspect(params)
     [namespace, api] = String.split(params[:type], ".")
 
     resp = cond do
       namespace == "user" ->
-        UserService.handle(api, params)
+        service_route UserService, api, params
       namespace == "group" ->
         GroupService.handle(api, params)
     end
 
-    IO.inspect(resp)
     conn
     |> put_status(200)
-    |> json(resp)
+#    |> json(fit_for_im_erlang(resp))
+        |> json((resp))
+  end
+
+  defp fit_for_im_erlang(%{service: @ok, data: d}) do
+    d
+  end
+  defp fit_for_im_erlang(_) do
+    %{}
   end
 end

@@ -12,24 +12,28 @@ defmodule Exmock.Common.ErrorCode do
     end
   end
 
+
   defmacro ok(data: data) do
     quote do
-      @ok
-      |> Map.merge(%{data: unquote(data)})
+      %{
+        service: @ok,
+        data: unquote(data)
+      }
     end
   end
 
   defmacro fail(err_code, data: data) do
     quote do
-      unquote(err_code)
-      |> Map.merge(%{data: unquote(data)})
-
+      %{
+        service: unquote(err_code),
+        data: unquote(data)
+      }
     end
   end
 
   defmacro fail(err_code) do
     quote do
-      fail(unquote(err_code), data: "")
+      fail(unquote(err_code), data: %{})
     end
   end
 end

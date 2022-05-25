@@ -2,6 +2,9 @@
 
 a game mocker server for im-erlang by using elixir-maru framework
 
+## work flow ##
+HTTP-REQ -> | Switcher | -> | controller | -> | service | -> | mapper | -> DB
+
 ## Getting started
 ### ecto
 #### to use
