@@ -20,3 +20,7 @@ config :exmock, Exmock.Server,
 
 config :exmock,
   maru_servers: [Exmock.Server]
+
+config :snowflake,
+  mechine_id: 1,
+  epoch: 1653903685676

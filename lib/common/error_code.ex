@@ -8,6 +8,7 @@ defmodule Exmock.Common.ErrorCode do
       @ok code 996, msg: "ok"
       @unknown_err code 999, msg: "unknown err"
       @ecode_not_found code 1000, msg: "can not found"
+      @ecode_db_error code 2000, msg: "db error"
 
     end
   end

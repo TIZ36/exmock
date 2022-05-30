@@ -18,5 +18,4 @@ defmodule Exmock.Service.User do
         ok(data: re)
     end
   end
-
 end

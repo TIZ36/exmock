@@ -8,6 +8,8 @@ defmodule Ezx.Orm.Mapper do
   defmacro __using__(_opts) do
     quote do
       import unquote(__MODULE__)
+      require Ezx.Util
+      import Ezx.Util
 
       def no_validate(_po) do
         true
@@ -22,7 +24,9 @@ defmodule Ezx.Orm.Mapper do
       def unquote(func_name)(unquote(po_type) = input) do
         case unquote(func).(input) do
           true ->
-            unquote(block)
+            no_panic unquote(mapper_name), fall_back: {:fail, :db_error} do
+              unquote(block)
+            end
           false ->
             {:fail, "validate fail"}
         end
