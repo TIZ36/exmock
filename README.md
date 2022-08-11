@@ -5,13 +5,13 @@ a game mocker server for im-erlang by using elixir-maru framework
 ---
 ## work flow ##
 ```text
-HTTP-REQ 
-    -> | Router                                      | mount Exmock.Switcher.Gmock 
-    -> | Switcher(Gmock)                             | mount Exmock.ChatApi           
-    -> | apis    (ChatApi)                           | get "chat" -> dispatch_get/dispatch_post -> UserService.get()/post()
-    -> | service (Exmock.Service.User)               | get("api", params) -> UserApiRepo.action()
-    -> | repos   (UserInfoRepo, UserBasicInfoRepo)   | Ecto.Query
-    -> DB
+HTTP-REQ   |                                             | DEMO
+        -> | Router                                      | mount Exmock.Switcher.Gmock 
+        -> | Switcher(Gmock)                             | mount Exmock.ChatApi           
+        -> | apis    (ChatApi)                           | get "chat" -> dispatch_get/dispatch_post -> UserService.get()/post()
+        -> | service (Exmock.Service.User)               | get("api", params) -> User`:Api`Repo.`:action`()
+        -> | repos   (UserInfoRepo, UserBasicInfoRepo)   | Ecto.Query
+        -> DB
 
 ErrorCode: Exmock.Common.ErrorCode
     - ok(data: result)
