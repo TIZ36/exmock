@@ -4,6 +4,7 @@ a game mocker server for im-erlang by using elixir-maru framework
 
 ---
 ## work flow ##
+```text
 HTTP-REQ 
     -> | Router                                      | mount Exmock.Switcher.Gmock 
     -> | Switcher(Gmock)                             | mount Exmock.ChatApi           
@@ -19,7 +20,7 @@ ErrorCode: Exmock.Common.ErrorCode
 定义Model[CamelCase] 
     -> mix ecto.gen.migration #{table_name} (ModelName的小写snake_case), 并修改filed类型 
     -> mix ecto.migrate
-
+```
 ---
 ---
 ---
