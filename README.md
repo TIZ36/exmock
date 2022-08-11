@@ -2,9 +2,27 @@
 
 a game mocker server for im-erlang by using elixir-maru framework
 
+---
 ## work flow ##
-HTTP-REQ -> | Router | -> |Switcher| -> | apis | -> | service | -> | repos | -> DB
+HTTP-REQ 
+    -> | Router                                      | mount Exmock.Switcher.Gmock 
+    -> | Switcher(Gmock)                             | mount Exmock.ChatApi           
+    -> | apis    (ChatApi)                           | get "chat" -> dispatch_get/dispatch_post -> UserService.get()/post()
+    -> | service (Exmock.Service.User)               | get("api", params) -> UserApiRepo.action()
+    -> | repos   (UserInfoRepo, UserBasicInfoRepo)   | Ecto.Query
+    -> DB
 
+ErrorCode: Exmock.Common.ErrorCode
+    - ok(data: result)
+    - fail(@ecode)
+
+定义Model[CamelCase] 
+    -> mix ecto.gen.migration #{table_name} (ModelName的小写snake_case), 并修改filed类型 
+    -> mix ecto.migrate
+
+---
+---
+---
 ## Getting started
 ### ecto
 #### to use
