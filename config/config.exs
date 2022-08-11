@@ -6,8 +6,9 @@ config :exmock, ecto_repos: [Exmock.Repo]
 config :exmock, Exmock.Repo,
   database: "game_mock",
   username: "root",
-  password: "0310",
-  hostname: "0.0.0.0",
+  password: "zWsxYmAcoutCtaa6",
+  hostname: "10.137.147.59",
+  port: 3306,
   pool_size: 10,
   show_sensitive_data_on_connection_error: true
 
