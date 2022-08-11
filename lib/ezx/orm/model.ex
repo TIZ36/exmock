@@ -6,7 +6,7 @@ defmodule Ezx.Orm.Model do
     quote do
       use Ecto.Schema
       import unquote(__MODULE__)
-      Module.register_attribute(__MODULE__, :data_po, accumulate: false)
+      Module.register_attribute(__MODULE__, :data_po, accumulate: true)
       @before_compile unquote(__MODULE__)
       @primary_key false
     end
@@ -17,20 +17,13 @@ defmodule Ezx.Orm.Model do
   """
   defmacro __before_compile__(_opts) do
     quote do
-      def new() do
-        %@data_po{}
-      end
-
-      def table() do
-        @table
-      end
     end
   end
 
   @doc """
   a useful macro based on ecto schema to define your `po` model
   """
-  defmacro model(model_name, [{:fields, fields} | _others]) do
+  defmacro model(model_name, [{:fields, fields} | _others], abs_struct \\ nil) do
     quote do
       real_name =
         String.split("#{unquote(model_name)}", ".")
@@ -42,15 +35,21 @@ defmodule Ezx.Orm.Model do
         "#{__MODULE__}.#{real_name}"
         |> String.to_atom()
 
-      @data_po po_model
-      @table Macro.underscore(table_name)
+
       defmodule po_model do
         use Ecto.Schema
+        @table Macro.underscore(table_name)
+        @data_po po_model
+
         @primary_key false
         schema Macro.underscore(table_name), do: unquote(fields)
 
-        def hi() do
-          __MODULE__
+        def table() do
+          @table
+        end
+
+        def data_type() do
+          unquote(abs_struct)
         end
       end
     end

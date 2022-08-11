@@ -3,7 +3,7 @@
 a game mocker server for im-erlang by using elixir-maru framework
 
 ## work flow ##
-HTTP-REQ -> | Switcher | -> | controller | -> | service | -> | mapper | -> DB
+HTTP-REQ -> | Router | -> |Switcher| -> | apis | -> | service | -> | repos | -> DB
 
 ## Getting started
 ### ecto

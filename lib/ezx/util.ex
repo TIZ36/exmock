@@ -1,5 +1,5 @@
 defmodule Ezx.Util do
-  defmacro no_panic(api, [fall_back: fall_back_return], do: block) do
+  defmacro no_panic(api, [fallback: fall_back_return], do: block) do
     quote do
       require Logger
 

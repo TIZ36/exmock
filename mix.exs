@@ -31,7 +31,10 @@ defmodule Exmock.MixProject do
       # and config with `config :maru, json_library, YOUR_JSON_LIBRARY`.
       {:jason, "~> 1.1"},
       # for id generation
-      {:snowflake, "~> 1.0"}
+      {:snowflake, "~> 1.0"},
+
+      # for fake data
+      {:faker, "~> 0.17"}
     ]
   end
 end

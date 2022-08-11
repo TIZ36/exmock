@@ -6,11 +6,11 @@ defmodule Exmock.Switcher.Gmock do
       json(conn, %{ hello: :world })
     end
 
-    namespace "group" do
-      mount Exmock.GroupController
-    end
+#    namespace "gear" do
+#      mount Exmock.GearApi
+#    end
 
-    mount Exmock.ChatController
+    mount Exmock.ChatApi
   end
 
   rescue_from :all, as: e do

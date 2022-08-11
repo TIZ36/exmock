@@ -7,3 +7,5 @@
 /_build
 /deps
 /log
+
+*.dump
