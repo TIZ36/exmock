@@ -6,9 +6,9 @@ defmodule Exmock.Switcher.Gmock do
       json(conn, %{ hello: :world })
     end
 
-#    namespace "gear" do
-#      mount Exmock.GearApi
-#    end
+    namespace "gear" do
+      mount Exmock.GearApi
+    end
 
     mount Exmock.ChatApi
   end

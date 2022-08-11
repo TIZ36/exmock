@@ -7,7 +7,7 @@ config :exmock, Exmock.Repo,
   database: "game_mock",
   username: "root",
   password: "0310",
-  hostname: "localhost",
+  hostname: "0.0.0.0",
   pool_size: 10,
   show_sensitive_data_on_connection_error: true
 

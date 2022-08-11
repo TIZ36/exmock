@@ -1,6 +1,5 @@
 defmodule Exmock.ChatApi do
   use Maru.Router
-  use Ezx.Controller
   use Exmock.Common.ErrorCode
   alias Exmock.Service.User, as: UserService
 
