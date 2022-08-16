@@ -2,7 +2,6 @@ defmodule Exmock.Service.User do
   use Exmock.Common.ErrorCode
   use Ezx.Service
 
-
   require Logger
 
   @doc """
@@ -12,8 +11,10 @@ defmodule Exmock.Service.User do
     case UserBasicInfoRepo.query_user_basicinfo_by_id(uid) do
       nil ->
         fail(@ecode_not_found)
+
       {:fail, reason} ->
         fail(@ecode_db_error)
+
       re ->
         ok(data: re)
     end
@@ -26,8 +27,10 @@ defmodule Exmock.Service.User do
     case UserInfoRepo.query_user_info_by_id(uid) do
       nil ->
         fail(@ecode_not_found)
+
       {:fail, reason} ->
         fail(@ecode_db_error)
+
       re ->
         ok(data: re)
     end
@@ -44,17 +47,18 @@ defmodule Exmock.Service.User do
       |> URI.decode()
       |> Jason.decode!()
 
-    ids = real_users
-          |> Enum.map(fn %{"uid" => uid} -> uid end)
+    ids =
+      real_users
+      |> Enum.map(fn %{"uid" => uid} -> uid end)
 
     case UserInfoRepo.batch_query_user_info_by_ids(ids) do
       {:fail, reason} ->
         fail(@ecode_db_error)
+
       re ->
         ok(data: re)
     end
   end
-
 
   ### post ###
   def post("info", _params) do
@@ -62,16 +66,17 @@ defmodule Exmock.Service.User do
 
     user_info = %User.UserInfo{
       uid: uid,
-      data: user_info_data
-            |> :erlang.term_to_binary()
+      data:
+        user_info_data
+        |> :erlang.term_to_binary()
     }
 
     case UserInfoRepo.insert_user_info(user_info) do
       {:fail, reason} ->
         fail(@ecode_db_error)
+
       re ->
         ok(data: re)
     end
   end
-
 end

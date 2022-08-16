@@ -7,7 +7,6 @@ defmodule Ezx.Http.RR do
     quote do
       import unquote(__MODULE__)
       use Ezx.Http.Code
-
     end
   end
 end

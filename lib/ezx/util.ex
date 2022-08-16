@@ -28,10 +28,12 @@ defmodule Ezx.Util do
         fn
           {k, v} ->
             {to_string(k), v}
+
           o ->
             o
         end
       )
+
     quote do
       unquote(block)
     end
@@ -42,19 +44,18 @@ defmodule Ezx.Util do
 
     new_record =
       record
-      |> Macro.prewalk(
-           fn
-             {^field, ov} = v ->
-               {field, value}
-             o ->
-               o
-           end
-         )
+      |> Macro.prewalk(fn
+        {^field, ov} = v ->
+          {field, value}
+
+        o ->
+          o
+      end)
+
     quote do
       unquote(new_record)
     end
   end
-
 end
 
 defmodule Test do
@@ -65,12 +66,9 @@ defmodule Test do
 
   def email_r(email(address: old_address) = input) do
     Macro.escape(email(input))
-
-
   end
 
   def a(email(address: addr, host: host) = input) do
     email(input, address: "zz")
   end
-
 end

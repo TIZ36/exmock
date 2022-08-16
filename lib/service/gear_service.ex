@@ -3,5 +3,4 @@ defmodule Exmock.Service.Gear do
   use Ezx.Service
 
   require Logger
-
 end

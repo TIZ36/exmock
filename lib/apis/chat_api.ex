@@ -27,6 +27,7 @@ defmodule Exmock.ChatApi do
         conn
         |> put_status(200)
         |> json(out(resp))
+
       _ ->
         conn
         |> put_status(400)
@@ -41,6 +42,7 @@ defmodule Exmock.ChatApi do
   defp out(%{service: @ok, data: d}) do
     d
   end
+
   defp out(_) do
     %{}
   end

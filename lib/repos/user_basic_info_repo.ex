@@ -4,17 +4,19 @@ defmodule UserBasicInfoRepo do
 
   def query_user_basicinfo_by_id(uid) do
     query =
-      from user_basic in User.BasicInfo.table(),
-           where: user_basic.uid == ^uid,
-           select: %{
-             uid: user_basic.uid,
-             cur_stage: user_basic.cur_stage,
-             maincity_level: user_basic.maincity_level
-           }
+      from(user_basic in User.BasicInfo.table(),
+        where: user_basic.uid == ^uid,
+        select: %{
+          uid: user_basic.uid,
+          cur_stage: user_basic.cur_stage,
+          maincity_level: user_basic.maincity_level
+        }
+      )
 
     case Exmock.Repo.one(query) do
       nil ->
         nil
+
       re ->
         re
     end

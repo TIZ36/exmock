@@ -34,7 +34,11 @@ defmodule Exmock.MixProject do
       {:snowflake, "~> 1.0"},
 
       # for fake data
-      {:faker, "~> 0.17"}
+      {:faker, "~> 0.17"},
+      {:tesla, "~> 1.4"},
+
+      # optional, but recommended adapter
+      {:finch, "~> 0.3"}
     ]
   end
 end

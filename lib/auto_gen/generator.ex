@@ -32,7 +32,7 @@ defmodule AutoGen do
         left_normal: %BubbleConfig{},
         left_pressed: %BubbleConfig{},
         right_normal: %BubbleConfig{},
-        right_pressed: %BubbleConfig{},
+        right_pressed: %BubbleConfig{}
       }
     end
   end
@@ -40,10 +40,12 @@ defmodule AutoGen do
   defmodule UserInfo do
     def new() do
       user_info_data = %{uid: uid} = AutoGen.UserInfoStructs.new()
+
       %User.UserInfo{
         uid: uid,
-        data: user_info_data
-              |> :erlang.term_to_binary()
+        data:
+          user_info_data
+          |> :erlang.term_to_binary()
       }
     end
   end
@@ -51,6 +53,7 @@ defmodule AutoGen do
   defmodule UserInfoStructs do
     def new() do
       uid = Exmock.IdUtil.gen_id()
+
       %UserInfoStruct{
         uid: uid,
         avatar: Faker.Avatar.image_url(),

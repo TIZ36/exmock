@@ -28,13 +28,14 @@ defmodule Ezx.Orm.Model do
       real_name =
         String.split("#{unquote(model_name)}", ".")
         |> List.last()
+
       table_name =
         String.split("#{unquote(model_name)}", ".")
         |> List.last()
+
       po_model =
         "#{__MODULE__}.#{real_name}"
         |> String.to_atom()
-
 
       defmodule po_model do
         use Ecto.Schema
@@ -42,7 +43,7 @@ defmodule Ezx.Orm.Model do
         @data_po po_model
 
         @primary_key false
-        schema Macro.underscore(table_name), do: unquote(fields)
+        schema(Macro.underscore(table_name), do: unquote(fields))
 
         def table() do
           @table

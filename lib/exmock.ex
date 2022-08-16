@@ -3,14 +3,14 @@ defmodule Exmock.App do
 
   @impl true
   def start(_, _) do
-    children =
-      [
-        # mysql repo
-        {Exmock.Repo, []},
-        # maru server
-        {Exmock.Server, []},
-      ]
+    IMCommon.HttpUtils.init()
+    children = [
+      # mysql repo
+      {Exmock.Repo, []},
+      # maru server
+      {Exmock.Server, []}
+    ]
 
-      Supervisor.start_link(children, strategy: :one_for_one)
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
