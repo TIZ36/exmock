@@ -41,7 +41,7 @@ defmodule AutoGen do
     def new() do
       user_info_data = %{uid: uid} = AutoGen.UserInfoStructs.new()
 
-      %User.UserInfo{
+      %Exmock.Data.Schema.UserInfo{
         uid: uid,
         data:
           user_info_data

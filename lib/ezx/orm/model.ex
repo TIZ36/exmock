@@ -23,7 +23,8 @@ defmodule Ezx.Orm.Model do
   @doc """
   a useful macro based on ecto schema to define your `po` model
   """
-  defmacro model(model_name, [{:fields, fields} | _others], abs_struct \\ nil) do
+  defmacro model(model_name, [{:fields, fields} | others], abs_struct \\ nil) do
+    cols = Keyword.get(others, :cols, [])
     quote do
       real_name =
         String.split("#{unquote(model_name)}", ".")
@@ -44,6 +45,12 @@ defmodule Ezx.Orm.Model do
 
         @primary_key false
         schema(Macro.underscore(table_name), do: unquote(fields))
+
+        def changeset(obj, attrs) do
+          obj
+          |> cast(attrs, [])
+          |> validate_require([])
+        end
 
         def table() do
           @table

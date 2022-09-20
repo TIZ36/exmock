@@ -5,10 +5,17 @@ defmodule Exmock.App do
   def start(_, _) do
     IMCommon.HttpUtils.init()
     children = [
+#      {Exmock.EtsCache, []},
+     {Exmock.EtsCache, []},
+     {Exmock.RedisCache, []},
+
       # mysql repo
       {Exmock.Repo, []},
       # maru server
-      {Exmock.Server, []}
+      {Exmock.Server, []},
+
+      # supervisors
+      Exmock.Service.Supervisor
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)

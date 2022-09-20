@@ -9,6 +9,9 @@ defmodule Exmock.Common.ErrorCode do
       @ecode_not_found code(1000, msg: "can not found")
       @ecode_db_error code(2000, msg: "db error")
       @ecode_internal_err code(500, msg: "internal error")
+
+      @ecode_dup_req code(501, msg: "duplicated request")
+      @ecode_service_reject code(502, msg: "service reject")
     end
   end
 
@@ -20,6 +23,7 @@ defmodule Exmock.Common.ErrorCode do
       }
     end
   end
+
 
   defmacro fail(err_code, data: data) do
     quote do

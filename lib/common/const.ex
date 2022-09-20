@@ -1,4 +1,4 @@
-defmodule Exmock.IMConstants do
+defmodule Exmock.Constants do
   defmacro __using__(_opts) do
     quote do
       @kingdom_id_lonia 1
@@ -13,6 +13,13 @@ defmodule Exmock.IMConstants do
       @msg_type_group 1
       @msg_type_room 4
       @msg_type_channel 5
+
+      @group_type_group 1
+      @group_type_room 2
+
+
+      @blacked 1
+      @no_blacked 0
     end
   end
 end

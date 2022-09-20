@@ -16,3 +16,18 @@ config :exmock, Exmock.Server,
   plug: Exmock.Router,
   scheme: :http,
   port: 8880
+
+
+config :exmock, Exmock.EtsCache,
+  primary: [
+    gc_interval: :timer.hours(12),
+    backend: :shards,
+    partitions: 2
+  ]
+
+config :exmock, Exmock.RedisCache,
+  conn_opts: [
+    host: "127.0.0.1",
+    password: "123456",
+    port: 6379
+  ]

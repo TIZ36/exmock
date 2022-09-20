@@ -1,7 +1,9 @@
 defmodule Ezx.Util do
-  defmacro no_panic(api, [fallback: fall_back_return], do: block) do
+  defmacro no_panic(api, [{fallback, fall_back_return} | opts], do: block) do
     quote do
       require Logger
+
+      use_throw = Keyword.get(unquote(opts), :use_throw, true)
 
       try do
         unquote(block)
@@ -10,9 +12,13 @@ defmodule Ezx.Util do
           Logger.warn("rescue err when #{inspect(unquote(api))}, err: #{inspect(err)}")
           unquote(fall_back_return)
       catch
-        throws ->
+        :throw, throws ->
           Logger.warn("catch throw when #{inspect(unquote(api))}, throws: #{inspect(throws)}")
-          unquote(fall_back_return)
+          if use_throw do
+            throws
+          else
+            unquote(fall_back_return)
+          end
 
         :exit, reason ->
           Logger.warn("catch exit when #{inspect(unquote(api))}, reason: #{inspect(reason)}")

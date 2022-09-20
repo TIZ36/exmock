@@ -38,7 +38,18 @@ defmodule Exmock.MixProject do
       {:tesla, "~> 1.4"},
 
       # optional, but recommended adapter
-      {:finch, "~> 0.3"}
+      {:finch, "~> 0.3"},
+
+      # cache
+      {:nebulex, "~> 2.3.1"},
+      {:shards, "~> 1.0"},
+      {:decorator, "~> 1.4"},
+      {:telemetry, "~> 1.0"},
+
+      # redis
+      {:nebulex_redis_adapter, "~> 2.2.0"}
+#      {:crc, "~> 0.10"},    #=> Needed when using Redis Cluster
+#      {:jchash, "~> 0.1.2"} #=> Needed when using consistent-hashing
     ]
   end
 end

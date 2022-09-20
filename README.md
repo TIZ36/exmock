@@ -5,6 +5,24 @@ a game mocker server for im-erlang by using elixir-maru framework
 ---
 ## work flow ##
 ```text
+规定下每个层的返回格式要求
+
+HTTP:
+----   API   ----
+%{code: resp_code, data: data}
+
+---- service ----
+no_panic "service_name", fallback: {:error, "[panic rescued] <> #{inspect(trace}}"} do
+{:ok, "success", data}, {:fail, "reason", nil}, {:error, "reason", trace}
+end
+
+----   data  ----
+{:ok, data, type}: 如果该接口需要进行数据转换,  
+{:ok, data}: 简单数据 , 
+{:fail, "reason"}: 无数据，或其他正常的错误
+{:error, trace}: 用no_panic包住了（数据层不用自己写，service层封装好了该结构）
+
+
 HTTP-REQ   |                                             | DEMO
         -> | Router                                      | mount Exmock.Switcher.Gmock 
         -> | Switcher(Gmock)                             | mount Exmock.ChatApi           
@@ -43,21 +61,51 @@ defmodule TestMapper do
     false
   end
 end
+                                                    /- feat ------------> rel6.7 --->
+dev -----------------------> merge --->-------------->
+      \--> rel6.6 -- test --/                       \- no feat-- merge--> rel6.6 --->
+                            \-- tag --> v6.6.0
+                            
+                            
+                            
+                            
+                                                                   tag v6.7.0                        tag v6.7.1                                                                                       
+                                                                   /          ---- bugfix ----       /               
+                                                                  /          /                 \    /         
+                                         ---- rel6.7.x [test_ok]-------------                   ->--
+                                        / sprint                                                    \
+     develop -------------------->------>------------------------------------------------------------>---->                           
+                 \              / merge/     
+                  |-- feat1 --->      /
+                  \                  /
+                   |---- feat2 ----->    
+                   
+                   
+                   
+                          
 ```
 ---
 ---
 ## Getting started
 ### ecto
 #### to use
+| - schema-type - | - migration-file - | - type mysql-type - |
+|-----------------|--------------------|---------------------|
+| :binary         | :blob              | :blob               | 
+| :integer(small) | :int               | :int                | 
+| :integer(large) | :bigint            | :bigint             | 
+| :string(large)  | :string            | :varchar            | 
+
+
 1. update mysql connection config in config.exs
 2. run `mix ecto.create`
 3. run `mix ecto.migrate`
 
-### to create new model
-1. new model file xx.ex
+### to create new data
+1. new data file xx.ex
 2. declare your schema 
 3. run `mix ecto.gen.migration #{table_name}`
-4. edit auto-gen migration file under /priv/repo/migrations
+4. edit auto-gen migration file under /priv/data/migrations
 5. run `mix ecto.migrate`
 
 ## Add your files

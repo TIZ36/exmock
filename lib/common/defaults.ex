@@ -1,5 +1,5 @@
 defmodule Exmock.Defaults do
-  use Exmock.IMConstants
+  use Exmock.Constants
 
   def kingdoms() do
     [
