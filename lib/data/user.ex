@@ -11,13 +11,10 @@ defmodule Exmock.Data.User do
   alias Exmock.Data.Schema.UserInfo
   alias Exmock.Data.Schema.UserFriend
   alias Exmock.Data.Schema.UserBlacklist
-  alias Exmock.Data.Schema.UserGroupMapping
 
   alias Exmock.EtsCache, as: Cache
   alias Exmock.Repo
   import Ecto.Query
-  import Ezx.Util
-
 
   require Logger
 
@@ -43,16 +40,15 @@ defmodule Exmock.Data.User do
   def update_user_basicinfo_by_uid(%{uid: id} = attrs) do
     user_basic_info = query_user_basicinfo_by_id(id)
 
-    %_{cur_stage: cs, maincity_level: ml, uid: uid} =
-      user_basic_info
-      |> UserBasicInfo.update_changeset(attrs)
-      |> Repo.update!()
+    user_basic_info
+    |> UserBasicInfo.update_changeset(attrs)
+    |> Repo.update!()
   end
 
   # ====== table: user_info, schema: Exmock.Data.Schema.UserInfo ======#
-  def create_user(%{uid: uid, data: data} = user_info) do
+  def create_user(%{uid: _uid, data: _data} = attrs) do
     %UserInfo{}
-    |> UserInfo.changeset(%{uid: uid, data: data})
+    |> UserInfo.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -87,10 +83,10 @@ defmodule Exmock.Data.User do
   成为好友
   """
   @decorate cache_evict(
-    cache: Cache,
-    keys: [{UserFriend, one_uid}, {UserFriend, ano_uid}]
-  )
-  def been_friend(%{one_uid: one_uid, ano_uid: ano_uid} = attr) do
+              cache: Cache,
+              keys: [{UserFriend, attr.one_uid}, {UserFriend, attr.ano_uid}]
+            )
+  def been_friend(%{one_uid: _one_uid, ano_uid: _ano_uid} = attr) do
     %UserFriend{}
     |> UserFriend.changeset(attr)
     |> Repo.insert!()
@@ -100,10 +96,10 @@ defmodule Exmock.Data.User do
   查询好友
   """
   @decorate cacheable(
-    cache: Cache,
-    key: {UserFriend, uid},
-    opts: [ttl: @ttl]
-  )
+              cache: Cache,
+              key: {UserFriend, uid},
+              opts: [ttl: @ttl]
+            )
   def query_user_friends(uid) do
     query =
       from(uf in UserFriend,
@@ -111,8 +107,9 @@ defmodule Exmock.Data.User do
         select: uf
       )
 
-    v = query
-    |> Repo.all()
+    v =
+      query
+      |> Repo.all()
 
     Logger.info("#{inspect(v)}")
 
@@ -130,26 +127,27 @@ defmodule Exmock.Data.User do
   删除好友，TODO: 后面改为伪删除
   """
   @decorate cache_evict(
-    cache: Cache,
-    keys: [{UserFriend, uid}, {UserFriend, ano_uid}]
-  )
-  def del_friend(%{one_uid: uid, ano_uid: ano_uid} = attr) do
+              cache: Cache,
+              keys: [{UserFriend, uid}, {UserFriend, ano_uid}]
+            )
+  def del_friend(%{one_uid: uid, ano_uid: ano_uid}) do
     rh = UserFriend.relate_hash(uid, ano_uid)
     uf = Repo.get!(UserFriend, rh)
 
     Repo.delete(uf)
   end
 
-  #---- user.blacklist ----#
+  # ---- user.blacklist ----#
   @decorate cache_evict(
-    cache: Cache,
-    keys: [{UserBlacklist, uid}, {UserBlackedlist, blacked_uid}]
-  )
+              cache: Cache,
+              keys: [{UserBlacklist, uid}, {UserBlackedlist, blacked_uid}]
+            )
   def add_blacklist(uid, blacked_uid) do
     query =
-      from ubl in UserBlacklist,
+      from(ubl in UserBlacklist,
         where: ubl.one_uid == ^uid and ubl.ano_uid == ^blacked_uid,
         select: ubl
+      )
 
     case Repo.one(query) do
       nil ->
@@ -160,9 +158,9 @@ defmodule Exmock.Data.User do
         |> UserBlacklist.changeset(attrs)
         |> Repo.insert()
 
-
       %_{black_state: bs} = user_blacklist_record ->
         attrs = Map.put(user_blacklist_record, :black_state, bs ||| @blacked)
+
         user_blacklist_record
         |> UserBlacklist.update_changeset(attrs)
         |> Repo.update()
@@ -170,14 +168,16 @@ defmodule Exmock.Data.User do
   end
 
   @decorate cache_evict(
-    cache: Cache,
-    keys: [{UserBlacklist, uid}, {UserBlackedlist, blacked_uid}]
-  )
+              cache: Cache,
+              keys: [{UserBlacklist, uid}, {UserBlackedlist, blacked_uid}]
+            )
   def rem_blacklist(uid, blacked_uid) do
     query =
-      from ubl in UserBlacklist,
-           where: ubl.one_uid == ^uid and ubl.ano_uid == ^blacked_uid and ubl.black_state == @blacked,
-           select: ubl
+      from(ubl in UserBlacklist,
+        where:
+          ubl.one_uid == ^uid and ubl.ano_uid == ^blacked_uid and ubl.black_state == @blacked,
+        select: ubl
+      )
 
     case Repo.one(query) do
       nil ->
@@ -193,15 +193,16 @@ defmodule Exmock.Data.User do
   end
 
   @decorate cacheable(
-    cache: Cache,
-    key: {UserBlacklist, uid},
-    opts: [ttl: @ttl]
-  )
+              cache: Cache,
+              key: {UserBlacklist, uid},
+              opts: [ttl: @ttl]
+            )
   def get_blacklist(uid) do
     query =
-      from ubl in UserBlacklist,
-      where: ubl.one_uid == ^uid and ubl.black_state == @blacked,
-      select: ubl.ano_uid
+      from(ubl in UserBlacklist,
+        where: ubl.one_uid == ^uid and ubl.black_state == @blacked,
+        select: ubl.ano_uid
+      )
 
     query
     |> Repo.all()
@@ -214,9 +215,10 @@ defmodule Exmock.Data.User do
             )
   def get_blacked_list(uid) do
     query =
-      from ubl in UserBlacklist,
-           where: ubl.ano_uid == ^uid and ubl.black_state == @blacked,
-           select: ubl.one_uid
+      from(ubl in UserBlacklist,
+        where: ubl.ano_uid == ^uid and ubl.black_state == @blacked,
+        select: ubl.one_uid
+      )
 
     query
     |> Repo.all()

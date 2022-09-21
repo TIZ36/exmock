@@ -1,4 +1,5 @@
 defmodule Exmock.Struct.FriendReq do
+  @moduledoc false
   @derive Jason.Encoder
   defstruct [
     :request_id,

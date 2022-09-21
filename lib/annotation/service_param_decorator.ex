@@ -1,7 +1,8 @@
 defmodule ServiceParamsDecorator do
+  @moduledoc false
   use Decorator.Define, [trans: 2]
 
-  def trans(params, type_define, body, context) do
+  def trans(params, type_define, body, _context) do
     quote do
       td = unquote(type_define)
       keys = :proplists.get_keys(td)

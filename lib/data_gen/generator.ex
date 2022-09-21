@@ -4,12 +4,14 @@ defmodule AutoGen do
   """
 
   defmodule Kingdoms do
+    @moduledoc false
     def new(id) do
       Exmock.Defaults.kingdom(id)
     end
   end
 
   defmodule Guilds do
+    @moduledoc false
     def new() do
       guild_id = Exmock.IdUtil.gen_id()
       name = Faker.Team.name()
@@ -21,12 +23,14 @@ defmodule AutoGen do
   end
 
   defmodule SubtitleLists do
+    @moduledoc false
     def new() do
       [%Subtitle{}]
     end
   end
 
   defmodule BubbleConfigs do
+    @moduledoc false
     def new() do
       %{
         left_normal: %BubbleConfig{},
@@ -38,6 +42,7 @@ defmodule AutoGen do
   end
 
   defmodule UserInfo do
+    @moduledoc false
     def new() do
       user_info_data = %{uid: uid} = AutoGen.UserInfoStructs.new()
 
@@ -51,6 +56,7 @@ defmodule AutoGen do
   end
 
   defmodule UserInfoStructs do
+    @moduledoc false
     def new() do
       uid = Exmock.IdUtil.gen_id()
 

@@ -1,5 +1,7 @@
 defmodule Exmock.Core.Util do
-  import Ezx.Util
+  @moduledoc """
+  核心工具类
+  """
 
   def type_ok?(k, t) do
     t == type(k)
@@ -12,16 +14,11 @@ defmodule Exmock.Core.Util do
     |> String.to_atom()
   end
 
-  def to_type(v, :Integer) do
-
-  end
-  def to_type(v, :BitString) do
-
-  end
-
   defmodule Test do
+    @moduledoc false
     def dd() do
-      a = [1,2,3]
+      a = [1, 2, 3]
+
       Enum.reduce_while(a, [], fn v, acc ->
         if rem(v, 2) == 0 do
           {:cont, acc}

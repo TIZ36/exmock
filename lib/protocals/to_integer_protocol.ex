@@ -12,5 +12,5 @@ defimpl ToIntegerProtocol, for: BitString do
   end
 end
 defimpl ToIntegerProtocol, for: Any do
-  def to(v), do: throw({:fail, :unsupport_trans})
+  def to(_v), do: throw({:fail, :unsupport_trans})
 end

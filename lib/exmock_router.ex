@@ -1,6 +1,8 @@
 defmodule Exmock.Router do
   use Exmock.Server
 
+  require Logger
+
   before do
     plug(Plug.Logger)
     plug(Plug.Static, at: "/static", from: "/my/static/path/")
@@ -15,8 +17,7 @@ defmodule Exmock.Router do
   mount(Exmock.Switcher.Gmock)
 
   rescue_from Unauthorized, as: e do
-    IO.inspect(e)
-
+    Logger.error("#{inspect(e)}")
     conn
     |> put_status(401)
     |> text("Unauthorized")

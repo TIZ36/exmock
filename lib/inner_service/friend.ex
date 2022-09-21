@@ -16,7 +16,7 @@ defmodule Exmock.Service.Friend do
 
   use GenServer
 
-  @friend_req_ttl 7 * 86400
+  @friend_req_ttl 7 * 86_400
 
   def init(_args) do
     {:ok, %{}}

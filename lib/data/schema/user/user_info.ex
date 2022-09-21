@@ -1,4 +1,5 @@
 defmodule Exmock.Data.Schema.UserInfo do
+  @moduledoc false
   use Ecto.Schema
 
   @primary_key false

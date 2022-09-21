@@ -1,4 +1,7 @@
 defmodule Exmock.Service.Supervisor do
+  @moduledoc """
+  业务根监督节点
+  """
   use Supervisor
 
   def start_link(init_args) do
@@ -6,6 +9,7 @@ defmodule Exmock.Service.Supervisor do
   end
 
   def init(_init_args) do
+    Exmock.HttpClient.init()
     children = [
       Exmock.Service.Friend
     ]

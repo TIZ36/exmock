@@ -1,4 +1,5 @@
 defmodule CassAnnotate do
+  @moduledoc false
   @reserved_noun [:aspects, :inject_func, :time_consume_cal?]
   def on_definition(env, _access, name, _args, _guards, _body) do
     case Enum.member?(@reserved_noun, name) do

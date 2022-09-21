@@ -1,9 +1,9 @@
 defmodule Exmock.App do
+  @moduledoc false
   use Application
 
   @impl true
   def start(_, _) do
-    IMCommon.HttpUtils.init()
     children = [
 #      {Exmock.EtsCache, []},
      {Exmock.EtsCache, []},

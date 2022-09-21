@@ -1,4 +1,5 @@
 defmodule Exmock.Data.Schema.GroupConfig do
+  @moduledoc false
   use Ecto.Schema
 
   @derive {Jason.Encoder, except: [:__meta__]}

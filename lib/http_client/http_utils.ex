@@ -1,4 +1,4 @@
-defmodule IMCommon.HttpUtils do
+defmodule Exmock.HttpClient do
   @moduledoc """
   http client工具类：
     1、使用tesla+finch的组合

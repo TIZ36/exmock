@@ -1,4 +1,5 @@
 defmodule Exmock.TimeUtil do
+  @moduledoc false
   def now_sec() do
     :erlang.system_time(1)
   end

@@ -12,5 +12,5 @@ defimpl ToStringProtocol, for: List do
   def to(v), do: List.to_charlist(v) |> to_string()
 end
 defimpl ToStringProtocol, for: Any do
-  def to(v), do: throw({:fail, :unsupport_trans})
+  def to(_v), do: throw({:fail, :unsupport_trans})
 end

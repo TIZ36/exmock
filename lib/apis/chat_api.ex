@@ -1,4 +1,9 @@
 defmodule Exmock.ChatApi do
+  @moduledoc """
+  /chat?xx
+  chat api汇总
+  """
+
   use Maru.Router
   use Exmock.Common.ErrorCode
   alias Exmock.Service.User, as: UserService

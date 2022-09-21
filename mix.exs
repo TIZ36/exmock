@@ -22,6 +22,7 @@ defmodule Exmock.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:maru, "~> 0.13.2"},
       {:plug_cowboy, "~> 2.3"},
       {:ecto_sql, "~> 3.0"},

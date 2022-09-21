@@ -1,4 +1,5 @@
 defmodule Exmock.Constants do
+  @moduledoc false
   defmacro __using__(_opts) do
     quote do
       @kingdom_id_lonia 1
@@ -20,6 +21,13 @@ defmodule Exmock.Constants do
 
       @blacked 1
       @no_blacked 0
+
+      @group_change_type_add 1
+      @group_change_type_leave 2
+      @group_change_type_create 3
+
+      @op_be_friend 1
+      @op_rm_friend 2
     end
   end
 end

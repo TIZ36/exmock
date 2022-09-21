@@ -43,4 +43,11 @@ defmodule Exmock.Data.Group do
     Repo.get(GroupConfig, group_id)
     |> Kernel.||([])
   end
+
+  @decorate cacheable(cache: Cache, key: {GroupOwners, group_id}, opts: [ttl: @ttl])
+  def query_group_owners(group_id) do
+    Repo.get(GroupOwner, group_id)
+    |> Map.take([:group_owners])
+    |> :erlang.binary_to_term()
+  end
 end

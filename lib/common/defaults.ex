@@ -1,4 +1,5 @@
 defmodule Exmock.Defaults do
+  @moduledoc false
   use Exmock.Constants
 
   def kingdoms() do

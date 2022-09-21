@@ -1,4 +1,7 @@
 defmodule Exmock.Service.Group do
+  @moduledoc """
+  群组业务相关
+  """
   use Exmock.Common.ErrorCode
   use Ezx.Service
   use ServiceParamsDecorator
@@ -80,16 +83,6 @@ defmodule Exmock.Service.Group do
     end
   end
 
-  def get("friends", params) do
-
-  end
-
-#  def get("presence", params)
-
-  def get("blacklist", params) do
-
-  end
-
   @doc """
   用于创建群组
   """
@@ -98,7 +91,7 @@ defmodule Exmock.Service.Group do
     group_info_attrs = Exmock.Gen.GroupInfo.gen_group_info(gname, group_sub_type)
 
     case Group.create_new_group_info(group_info_attrs) do
-      {:ok, %GroupInfo{group_id: gid} = re} ->
+      {:ok, %GroupInfo{} = re} ->
         group_info_map =
           re
           |> DTA.TransProtocol.trans()
@@ -117,10 +110,16 @@ defmodule Exmock.Service.Group do
       gid = param["group_id"]
       uid = param["uid"]
 
+      # ensure we have this group
       Group.query_group_info_by_gid(gid)
+
+      # ensure we have this user
       User.query_user_info_by_id(uid)
 
       UserGroup.user_join(gid, uid)
+
+      # notify im server
+      Exmock.Service.IMNotify.change_members_v2(0, %{add: [{gid, [uid]}]})
 
       ok(data: %{code: 200, msg: "success"})
     end

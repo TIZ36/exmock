@@ -1,4 +1,5 @@
 defmodule Exmock.Common.ErrorCode do
+  @moduledoc false
   defmacro __using__(_version) do
     quote do
       import unquote(__MODULE__)
