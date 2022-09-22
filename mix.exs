@@ -31,6 +31,7 @@ defmodule Exmock.MixProject do
       # Optional dependency, you can also add your own json_library dependency
       # and config with `config :maru, json_library, YOUR_JSON_LIBRARY`.
       {:jason, "~> 1.1"},
+      {:json, "~> 1.4"},
       # for id generation
       {:snowflake, "~> 1.0"},
 

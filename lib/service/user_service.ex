@@ -2,17 +2,21 @@ defmodule Exmock.Service.User do
   @moduledoc """
   用户相关业务
   """
-  use Exmock.Common.ErrorCode
-  use Ezx.Service
-  use ServiceParamsDecorator
 
-  import Ezx.Util
+  # exmock std resp
+  use Exmock.Resp
+
+  # exmock service decorator
+  use ServiceParamsDecorator
 
   require Logger
 
+  # alias of Data-Control Layer
   alias Exmock.Data.User
   alias Exmock.Data.Group
   alias Exmock.Data.UserGroup
+
+  # alias of Data-Schema Layer
   alias Exmock.Data.Schema.GroupInfo
 
   @doc """

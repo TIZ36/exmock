@@ -2,23 +2,24 @@ defmodule Exmock.Service.Group do
   @moduledoc """
   群组业务相关
   """
-  use Exmock.Common.ErrorCode
-  use Ezx.Service
+
+  use Exmock.Resp
   use ServiceParamsDecorator
 
   require Logger
 
+  # alias of Data-Control Layer
   alias Exmock.Data.Group
   alias Exmock.Data.User
   alias Exmock.Data.UserGroup
-  alias Exmock.Data.Schema.GroupInfo
 
-  import Ezx.Util
+  # alias of Data-Schema Layer
+  alias Exmock.Data.Schema.GroupInfo
 
   @doc """
   GET / group
   """
-  def get(api, params)
+  def get(_api, _params)
 
   @decorate trans(params, [{"groupId", :Integer}, {"language", :String}])
   def get("info", params) do

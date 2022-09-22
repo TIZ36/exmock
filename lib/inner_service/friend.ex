@@ -10,7 +10,7 @@ defmodule Exmock.Service.Friend do
   alias Exmock.Data.User
 
   # useful macro
-  import Ezx.Util
+  import Exmock.NPR
 
   require Logger
 

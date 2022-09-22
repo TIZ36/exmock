@@ -1,5 +1,19 @@
-defmodule Ezx.Util do
-  @moduledoc false
+defmodule Exmock.NPR do
+  @moduledoc """
+  Normalize Policy Routines
+  """
+
+  @doc """
+  ecode macro
+  """
+  defmacro ecode(v) do
+    quote do
+      %{
+        unquote_splicing(v)
+      }
+    end
+  end
+
   defmacro no_panic(api, [{fallback, fall_back_return} | opts], do: block) do
     quote do
       require Logger

@@ -5,12 +5,14 @@ defmodule Exmock.ChatApi do
   """
 
   use Maru.Router
-  use Exmock.Common.ErrorCode
+  use Exmock.Resp
+
+  # alias of Service-Logic Layer
   alias Exmock.Service.User, as: UserService
   alias Exmock.Service.Group, as: GroupService
 
-  import Ezx.Util
   require Logger
+
 
   @doc """
   定义分发的service入口
@@ -81,11 +83,11 @@ defmodule Exmock.ChatApi do
     params
   end
 
-  defp out(%{service: @ok, data: d}) do
-    d
+  defp out(%{code: @resp_code_ok, data: data}) do
+    data
   end
-  defp out(%{service: err, data: d}) do
-    err
+  defp out(%{}= e) do
+    e
   end
   defp out(_) do
     %{}
