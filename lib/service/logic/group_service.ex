@@ -35,7 +35,7 @@ defmodule Exmock.Service.Group do
       %GroupInfo{} = group_info_struct ->
         group_info_map =
           group_info_struct
-          |> DTA.TransProtocol.trans()
+          |> DataType.TransProtocol.trans_out()
 
         ok(data: group_info_map)
     end
@@ -53,7 +53,7 @@ defmodule Exmock.Service.Group do
           case User.query_user_info_by_id(uid) do
             %Exmock.Data.Schema.UserInfo{} = user_info ->
               [
-                DTA.TransProtocol.trans(user_info)
+                DataType.TransProtocol.trans_out(user_info)
                 |> Map.take([:uid, :user_name, :avatar, :guild_name, :kingdom_icon])
                 |> Map.merge(%{guild_name: "", kingdom_icon: ""})
                 | acc
@@ -75,7 +75,7 @@ defmodule Exmock.Service.Group do
         [] ->
           ok(data: [])
         %Exmock.Data.Schema.GroupConfig{} = group_config ->
-          data = DTA.TransProtocol.trans(group_config)
+          data = DataType.TransProtocol.trans_out(group_config)
 
           ok(data: data)
         _ ->
@@ -89,13 +89,13 @@ defmodule Exmock.Service.Group do
   """
   def post("create", %{"group_name" => gname} = params) do
     group_sub_type = Map.get(params, "group_sub_type", 0)
-    group_info_attrs = Exmock.Gen.GroupInfo.gen_group_info(gname, group_sub_type)
+    group_info_attrs = Exmock.AutoGen.Guilds.create_group(gname, group_sub_type)
 
     case Group.create_new_group_info(group_info_attrs) do
       {:ok, %GroupInfo{} = re} ->
         group_info_map =
           re
-          |> DTA.TransProtocol.trans()
+          |> DataType.TransProtocol.trans_out()
 
         # 创建成功
         ok(data: group_info_map)

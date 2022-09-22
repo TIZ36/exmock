@@ -60,7 +60,7 @@ defmodule Exmock.Service.User do
         fail(@ecode_db_error)
 
       %Exmock.Data.Schema.UserInfo{} = user_info_schema ->
-        re = DTA.TransProtocol.trans(user_info_schema)
+        re = DataType.TransProtocol.trans_out(user_info_schema)
         ok(data: re)
     end
   end
@@ -94,7 +94,7 @@ defmodule Exmock.Service.User do
         Enum.reduce(re, [], fn gid, acc ->
           case Group.query_group_info_by_gid(gid) do
             %GroupInfo{} = group_info_struct ->
-              [group_info_struct |> DTA.TransProtocol.trans() | acc]
+              [group_info_struct |> DataType.TransProtocol.trans_out() | acc]
 
             _ ->
               throw(fail(@ecode_not_found))
@@ -121,7 +121,7 @@ defmodule Exmock.Service.User do
           case User.query_user_info_by_id(uid) do
             %Exmock.Data.Schema.UserInfo{} = user_info_schema ->
               %{avatar: avatar, uid: uid, user_name: user_name} =
-                DTA.TransProtocol.trans(user_info_schema)
+                DataType.TransProtocol.trans_out(user_info_schema)
 
               [%{id: uid, avatar: avatar, name: user_name} | acc]
 
@@ -159,7 +159,7 @@ defmodule Exmock.Service.User do
 
   ### post ###
   def post("create", _params) do
-    user_info = AutoGen.UserInfo.new()
+    user_info = Exmock.AutoGen.UserInfo.new()
 
     case User.create_user(user_info) do
       {:fail, reason} ->
@@ -186,7 +186,7 @@ defmodule Exmock.Service.User do
   #
   @decorate trans(params, [{"from_uid", :Integer}, {"to_uid", :Integer}, {"msg", :String}])
   def post("add_friend", params) do
-    no_panic "add_friend", fallback: fail(@unknown_err), use_throw: true do
+    no_panic "add_friend", fallback: fail(@unknown_err) do
       from_uid = params["from_uid"]
       to_uid = params["to_uid"]
       msg = params["msg"]

@@ -76,7 +76,7 @@ defmodule Exmock.Service.IMNotify do
         users = build_user(uids)
 
         %{group_id: gid, group_name: gname, group_type: gt, group_sub_type: gst} =
-          Group.query_group_info_by_gid(group_id) |> DTA.TransProtocol.trans()
+          Group.query_group_info_by_gid(group_id) |> DataType.TransProtocol.trans_out()
 
         %{
           operator: ope,
@@ -96,7 +96,7 @@ defmodule Exmock.Service.IMNotify do
           users = build_user(uids)
           group_owners = build_group_owners(group_id)
           %{group_name: gname, group_type: gt, group_sub_type: gst} =
-            Group.query_group_info_by_gid(group_id) |> DTA.TransProtocol.trans()
+            Group.query_group_info_by_gid(group_id) |> DataType.TransProtocol.trans_out()
 
           %{
             operator: ope,

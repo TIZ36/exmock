@@ -13,7 +13,7 @@ defmodule Exmock.ErrorCode do
       @ecode_db_error ecode(code: 2000, err_msg: "db error")
       @ecode_internal_err ecode(code: 500, err_msg: "internal error")
 
-      @ecode_dup_req ecode(code: 501, msg: "duplicated request")
+      @ecode_dup_req ecode(code: 501, err_msg: "duplicated request")
       @ecode_service_reject ecode(code: 502, err_msg: "service reject")
     end
   end

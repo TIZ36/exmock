@@ -1,37 +1,41 @@
-defprotocol DTA.TransProtocol do
-  @spec trans(t) :: Any.t()
-  def trans(value)
-end
-
-defimpl DTA.TransProtocol, for: Exmock.Data.Schema.GroupConfig do
+defimpl DataType.TransProtocol, for: Exmock.Data.Schema.GroupConfig do
   @dta_group_config [
     group_id: :Integer,
     positions: :Binary
   ]
 
-  def trans(group_config) do
+  def trans_out(group_config) do
     group_config
     |> Map.take(Keyword.keys(@dta_group_config))
     |> Map.get(:positions, :erlang.term_to_binary([]))
     |> :erlang.binary_to_term()
   end
+
+  def trans_in(v) do
+    v
+  end
 end
 
-defimpl DTA.TransProtocol, for: Exmock.Data.Schema.UserInfo do
+defimpl DataType.TransProtocol, for: Exmock.Data.Schema.UserInfo do
   @dta_user_info [
     uid: :Integer,
     data: :Binary
   ]
 
-  def trans(user_info_schema) do
+  def trans_out(user_info_schema) do
     user_info_schema
     |> Map.take(Keyword.keys(@dta_user_info))
     |> Map.get(:data, :erlang.term_to_binary(%{}))
     |> :erlang.binary_to_term()
   end
+
+  def trans_in(v) do
+    v
+  end
 end
 
-defimpl DTA.TransProtocol, for: Exmock.Data.Schema.GroupInfo do
+
+defimpl DataType.TransProtocol, for: Exmock.Data.Schema.GroupInfo do
   @dta_group_info [
     group_id: :Integer,
     group_name: :BitString,
@@ -47,25 +51,29 @@ defimpl DTA.TransProtocol, for: Exmock.Data.Schema.GroupInfo do
 
   alias Exmock.NPR
 
-  def trans(group_info_schema) do
+  def trans_out(group_info_schema) do
     group_info_schema
     |> Map.take(Keyword.keys(@dta_group_info))
     |> Enum.reduce(
-      %{},
-      fn
-        {:at_all_per_day, nil}, acc ->
-          Map.put(acc, :at_all_per_day, 10)
+         %{},
+         fn
+           {:at_all_per_day, nil}, acc ->
+             Map.put(acc, :at_all_per_day, 10)
 
-        {:manager_list, v}, acc ->
-          Map.put(acc, :manager_list, Jason.decode!(v))
+           {:manager_list, v}, acc ->
+             Map.put(acc, :manager_list, Jason.decode!(v))
 
-        {k, v}, acc ->
-          if NPR.type_ok?(v, Keyword.get(@dta_group_info, k)) do
-            Map.put(acc, k, v)
-          else
-            acc
-          end
-      end
-    )
+           {k, v}, acc ->
+             if NPR.type_ok?(v, Keyword.get(@dta_group_info, k)) do
+               Map.put(acc, k, v)
+             else
+               acc
+             end
+         end
+       )
+  end
+
+  def trans_in(v) do
+    v
   end
 end

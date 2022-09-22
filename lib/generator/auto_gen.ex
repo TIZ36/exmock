@@ -1,4 +1,4 @@
-defmodule AutoGen do
+defmodule Exmock.AutoGen do
   @moduledoc """
   自动生成数据
   """
@@ -11,7 +11,20 @@ defmodule AutoGen do
   end
 
   defmodule Guilds do
+    use Exmock.Const
     @moduledoc false
+    def create_group(group_name, group_sub_type) do
+      %{
+        group_id: Exmock.IdUtil.gen_id(),
+        group_avatar: Faker.Avatar.image_url(),
+        group_name: group_name,
+        group_sub_type: group_sub_type,
+        group_type: @group_type_group,
+        manager_list: "[]",
+        server_id: "1",
+        at_all_per_day: 10
+      }
+    end
     def new() do
       guild_id = Exmock.IdUtil.gen_id()
       name = Faker.Team.name()
@@ -44,7 +57,7 @@ defmodule AutoGen do
   defmodule UserInfo do
     @moduledoc false
     def new() do
-      user_info_data = %{uid: uid} = AutoGen.UserInfoStructs.new()
+      user_info_data = %{uid: uid} = Exmock.AutoGen.UserInfoStructs.new()
 
       %Exmock.Data.Schema.UserInfo{
         uid: uid,
@@ -63,12 +76,12 @@ defmodule AutoGen do
       %UserInfoStruct{
         uid: uid,
         avatar: Faker.Avatar.image_url(),
-        kingdom: AutoGen.Kingdoms.new(uid),
-        guild: AutoGen.Guilds.new(),
+        kingdom: Exmock.AutoGen.Kingdoms.new(uid),
+        guild: Exmock.AutoGen.Guilds.new(),
         badge_url: "",
-        sub_title_list: AutoGen.SubtitleLists.new(),
+        sub_title_list: Exmock.AutoGen.SubtitleLists.new(),
         avatar_frame_url: "",
-        bubble_configs: AutoGen.BubbleConfigs.new(),
+        bubble_configs: Exmock.AutoGen.BubbleConfigs.new(),
         vip_level: 0,
         show_vip: false,
         level: 10,
