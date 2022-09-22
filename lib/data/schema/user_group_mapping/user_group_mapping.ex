@@ -17,7 +17,7 @@ defmodule Exmock.Data.Schema.UserGroupMapping do
   """
   def changeset(user_group_mapping, attrs) do
     user_group_mapping
-    |> Ecto.Changeset.cast(attrs, [:uid, :group_id])
-    |> Ecto.Changeset.validate_required([:uid, :group_id])
+    |> Ecto.Changeset.cast(attrs, @required_fields)
+    |> Ecto.Changeset.validate_required(@required_fields)
   end
 end

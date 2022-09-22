@@ -4,7 +4,7 @@ defmodule Exmock.Data.User do
   """
 
   use Nebulex.Caching
-  use Exmock.Constants
+  use Exmock.Const
   use Bitwise
 
   alias Exmock.Data.Schema.UserBasicInfo

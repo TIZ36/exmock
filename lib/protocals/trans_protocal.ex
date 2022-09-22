@@ -45,7 +45,7 @@ defimpl DTA.TransProtocol, for: Exmock.Data.Schema.GroupInfo do
     at_all_per_day: :Integer
   ]
 
-  alias Exmock.Core.Util
+  alias Exmock.NPR
 
   def trans(group_info_schema) do
     group_info_schema
@@ -60,7 +60,7 @@ defimpl DTA.TransProtocol, for: Exmock.Data.Schema.GroupInfo do
           Map.put(acc, :manager_list, Jason.decode!(v))
 
         {k, v}, acc ->
-          if Util.type_ok?(v, Keyword.get(@dta_group_info, k)) do
+          if NPR.type_ok?(v, Keyword.get(@dta_group_info, k)) do
             Map.put(acc, k, v)
           else
             acc

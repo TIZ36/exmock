@@ -2,6 +2,22 @@ defmodule Exmock.NPR do
   @moduledoc """
   Normalize Policy Routines
   """
+  @doc """
+  检查类型
+  """
+  def type_ok?(k, t) do
+    t == type(k)
+  end
+
+  @doc """
+  获取类型
+  """
+  def type(k) do
+    IEx.Info.info(k)
+    |> :maps.from_list()
+    |> Map.get("Data type")
+    |> String.to_atom()
+  end
 
   @doc """
   ecode macro
@@ -14,7 +30,7 @@ defmodule Exmock.NPR do
     end
   end
 
-  defmacro no_panic(api, [{fallback, fall_back_return} | opts], do: block) do
+  defmacro no_panic(api, [{:fallback, fall_back_return} | opts], do: block) do
     quote do
       require Logger
 

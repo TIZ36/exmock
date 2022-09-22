@@ -9,7 +9,7 @@ defmodule Exmock.Service.IMNotify do
   alias Exmock.Data.User
   alias Exmock.Data.Group
 
-  use Exmock.Constants
+  use Exmock.Const
 
   require Logger
 

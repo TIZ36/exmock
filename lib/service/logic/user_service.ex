@@ -241,7 +241,7 @@ defmodule Exmock.Service.User do
   # 添加黑名单
   @decorate trans(params, [{"uid", :Integer}, {"black_uid", :Integer}])
   def post("add_blacklist", params) do
-    no_panic "user.add_blacklist", fallblack: fail(@unknown_err) do
+    no_panic "user.add_blacklist", fallback: fail(@unknown_err) do
       uid = params["uid"]
       black_uid = params["black_uid"]
 
@@ -256,7 +256,7 @@ defmodule Exmock.Service.User do
   # 删除黑名单
   @decorate trans(params, [{"uid", :Integer}, {"black_uid", :Integer}])
   def post("del_blacklist", params) do
-    no_panic "user.del_blacklist", fallblack: fail(@unknown_err) do
+    no_panic "user.del_blacklist", fallback: fail(@unknown_err) do
       uid = params["uid"]
       black_uid = params["black_uid"]
 

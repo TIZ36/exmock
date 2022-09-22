@@ -6,7 +6,7 @@ defmodule AutoGen do
   defmodule Kingdoms do
     @moduledoc false
     def new(id) do
-      Exmock.Defaults.kingdom(id)
+      Exmock.Default.kingdom(id)
     end
   end
 

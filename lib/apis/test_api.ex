@@ -13,4 +13,10 @@ defmodule Test do
   def failr2() do
     fail(@unknown_err)
   end
+
+
+  def tt([{:fallback, fb} | others]) do
+    IO.inspect(fb)
+    IO.inspect(others)
+  end
 end

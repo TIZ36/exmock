@@ -1,7 +1,7 @@
 defmodule Exmock.Gen.GroupInfo do
 
   @moduledoc false
-  use Exmock.Constants
+  use Exmock.Const
 
   def gen_group_info(group_name, group_sub_type \\ 0) do
     %{

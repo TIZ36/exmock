@@ -22,7 +22,7 @@ defmodule Exmock.Data.Schema.UserBlacklist do
     timestamps()
   end
 
-  def changeset(user_black, %{one_uid: one_uid, ano_uid: ano_uid, black_state: bls} = attrs) do
+  def changeset(user_black, %{one_uid: one_uid, ano_uid: ano_uid, black_state: _bls} = attrs) do
     attrs2 = Map.put(attrs, :relate_hash, relate_hash(one_uid, ano_uid))
 
     user_black

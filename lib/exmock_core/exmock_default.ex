@@ -1,6 +1,6 @@
-defmodule Exmock.Defaults do
+defmodule Exmock.Default do
   @moduledoc false
-  use Exmock.Constants
+  use Exmock.Const
 
   def kingdoms() do
     [
