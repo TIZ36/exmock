@@ -72,33 +72,32 @@ defmodule Exmock.Service.IMNotify do
     access_type = Exmock.EnvCfg.get_at!()
     leave_part =
       leaves
-      |> Enum.reduce([], fn {group_id, uids} ->
+      |> Enum.reduce([], fn {group_id, uids}, acc ->
         users = build_user(uids)
 
-        %{group_id: gid, group_name: gname, group_type: gt, group_sub_type: gst} =
-          Group.query_group_info_by_gid(group_id) |> DataType.TransProtocol.trans_out()
+        %{group_name: gname, group_type: gt, group_sub_type: gst} =
+          (Group.query_group_info_by_gid(group_id) |> DataType.TransProtocol.trans_out())
 
-        %{
+        [%{
           operator: ope,
           users: users,
-          groupId: gid,
+          groupId: group_id,
           groupType: gt,
           groupName: gname,
           groupSubType: gst,
           changeType: @group_change_type_leave
-        }
+        } | acc]
       end)
-
 
       add_part =
         adds
-        |> Enum.reduce([], fn {group_id, uids} ->
+        |> Enum.reduce([], fn {group_id, uids}, acc ->
           users = build_user(uids)
           group_owners = build_group_owners(group_id)
-          %{group_name: gname, group_type: gt, group_sub_type: gst} =
-            Group.query_group_info_by_gid(group_id) |> DataType.TransProtocol.trans_out()
+          %{group_name: gname, group_type: gt, group_sub_type: gst}
+          = (Group.query_group_info_by_gid(group_id) |> DataType.TransProtocol.trans_out())
 
-          %{
+          [%{
             operator: ope,
             users: users,
             groupId: group_id,
@@ -107,12 +106,10 @@ defmodule Exmock.Service.IMNotify do
             groupSubType: gst,
             changeType: @group_change_type_add,
             groupOwners: group_owners
-          }
+          } | acc]
         end)
 
-
         body = %{accessType: access_type, changeMemList: leave_part ++ add_part}
-
 
         re = Exmock.HttpClient.http_post("http://localhost:9141/notification.change_members_v2", body)
         Logger.warn("change_members_v2 returns: #{inspect(re)}")
@@ -129,6 +126,7 @@ defmodule Exmock.Service.IMNotify do
       lang: lang
     }
 
+    IO.inspect(body)
     re = Exmock.HttpClient.http_post("http://localhost:9141/notification.change_relation", body)
     Logger.warn("change_relation returns: #{inspect(re)}")
   end
@@ -143,13 +141,14 @@ defmodule Exmock.Service.IMNotify do
     }
 
     url = "http://localhost:9141/notification.change_blacklistRelation"
+    IO.inspect(body)
     re = Exmock.HttpClient.http_post(url, body)
     Logger.warn("change_blacklistRelation returns: #{inspect(re)}")
   end
 
   def build_user(uids) do
     Enum.map(uids, fn uid ->
-      %{uid: uid, user_name: uname} = User.query_user_info_by_id(uid)
+      %{uid: uid, user_name: uname} = User.query_user_info_by_id(uid) |> DataType.TransProtocol.trans_out()
 
       %{uid: uid, userName: uname}
     end)

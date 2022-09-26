@@ -17,4 +17,10 @@ defmodule Exmock.Data.Schema.GroupOwner do
     |> Ecto.Changeset.cast(attrs, [:group_id, :group_owners])
     |> Ecto.Changeset.validate_required([:group_id, :group_owners])
   end
+
+  def update_changeset(group_owner, attrs) do
+    group_owner
+    |> Ecto.Changeset.cast(attrs, [:group_id, :group_owners])
+    |> Ecto.Changeset.validate_required([:group_owners])
+  end
 end

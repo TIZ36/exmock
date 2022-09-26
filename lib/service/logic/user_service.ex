@@ -183,6 +183,7 @@ defmodule Exmock.Service.User do
         } ->
           User.create_user_basicinfo(%{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)})
           ok(data: %{info: :erlang.binary_to_term(data_bin),basicinfo: %{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)}})
+
         _ ->
           fail(@unknown_err)
       end
@@ -226,7 +227,8 @@ defmodule Exmock.Service.User do
       request_id = params["request_id"]
 
       case Exmock.Service.Friend.accept_friend_req(uid, request_id) do
-        {:ok, _} ->
+        {:ok, target_id} ->
+          notify_im_change_relation(uid, [target_id], @op_be_friend)
           ok(data: %{})
 
         {:fail, reason} ->
@@ -245,6 +247,7 @@ defmodule Exmock.Service.User do
 
       case User.del_friend(%{one_uid: uid, ano_uid: ano_uid}) do
         {:ok, _} ->
+          notify_im_change_relation(uid, [ano_uid], @op_rm_friend)
           ok(data: %{})
 
         _ ->
@@ -261,7 +264,7 @@ defmodule Exmock.Service.User do
       black_uid = params["black_uid"]
 
       User.add_blacklist(uid, black_uid)
-#      notify_im_change_blacklist(uid)
+      notify_im_change_blacklist(uid)
 
       ok(data: %{})
     end
@@ -276,12 +279,15 @@ defmodule Exmock.Service.User do
 
       User.rem_blacklist(uid, black_uid)
 
-#      notify_im_change_blacklist(uid)
+      notify_im_change_blacklist(uid)
 
       ok(data: %{})
     end
   end
 
+  def notify_im_change_relation(uid, target_uids, ope) do
+    Exmock.Service.IMNotify.change_relation(uid, target_uids, ope)
+  end
   def notify_im_change_blacklist(uid) do
     blacklist = User.get_blacklist(uid)
     blackedlist = User.get_blacked_list(uid)

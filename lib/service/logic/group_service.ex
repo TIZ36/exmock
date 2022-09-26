@@ -117,11 +117,12 @@ defmodule Exmock.Service.Group do
     end
   end
 
-  @decorate trans(param, [{"group_id", :Integer}, {"uid", :Integer}])
+  @decorate trans(param, [{"group_id", :Integer}, {"uid", :Integer}, {"ope", :Integer}])
   def post("group.join", param) do
     no_panic "join", fallback: fail(@ecode_service_reject) do
       gid = param["group_id"]
       uid = param["uid"]
+      ope = Map.get(param, "ope", 0)
 
       # ensure we have this group
       Group.query_group_info_by_gid(gid)
@@ -131,20 +132,26 @@ defmodule Exmock.Service.Group do
 
       UserGroup.user_join(gid, uid)
 
-      # notify im server
-#      Exmock.Service.IMNotify.change_members_v2(0, %{add: [{gid, [uid]}]})
+      IO.inspect("prepare to notify im")
 
-      ok(data: %{code: 200, msg: "success"})
+      # notify im server
+      Exmock.Service.IMNotify.change_members_v2(ope, %{add: [{gid, [uid]}], leave: []})
+
+      ok(data: %{})
     end
   end
 
-  @decorate trans(params, [{"group_id", :Integer}, {"uid", :Integer}])
+  @decorate trans(params, [{"group_id", :Integer}, {"uid", :Integer}, {"ope", :Integer}])
   def post("group.leave", params) do
     no_panic "group.leave", fallback: fail(@ecode_service_reject) do
       uid = params["uid"]
       gid = params["group_id"]
+      ope = Map.get(params, "ope", 0)
 
       UserGroup.del_user_group_mapping(gid, uid)
+
+      # notify im server
+      Exmock.Service.IMNotify.change_members_v2(ope, %{add: [], leave: [{gid, [uid]}]})
 
       ok(data: %{})
     end

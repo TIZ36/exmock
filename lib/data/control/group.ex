@@ -7,6 +7,7 @@ defmodule Exmock.Data.Group do
 
   alias Exmock.Data.Schema.GroupInfo
   alias Exmock.Data.Schema.GroupConfig
+  alias Exmock.Data.Schema.GroupOwner
 
   alias Exmock.EtsCache, as: Cache
   alias Exmock.Repo
@@ -55,10 +56,29 @@ defmodule Exmock.Data.Group do
     |> Kernel.||([])
   end
 
-  @decorate cacheable(cache: Cache, key: {GroupOwners, group_id}, opts: [ttl: @ttl])
   def query_group_owners(group_id) do
-    Repo.get(GroupOwner, group_id)
-    |> Map.take([:group_owners])
-    |> :erlang.binary_to_term()
+    case Repo.get(GroupOwner, group_id) do
+      %_{group_owners: gos} ->
+        :erlang.binary_to_term(gos)
+      _ ->
+        [0]
+    end
+  end
+
+  def add_group_owners(group_id, uid) do
+    case Repo.get(GroupOwner, group_id) do
+      nil ->
+        %GroupOwner{}
+        |> GroupOwner.changeset(%{group_owners: :erlang.term_to_binary([uid]), group_id: group_id})
+        |> Repo.insert()
+
+      %_{group_owners: owners_bin} = group_own ->
+        old_owners = owners_bin |> :erlang.binary_to_term()
+        new_owners = [uid | old_owners] |> Enum.dedup() |> :erlang.term_to_binary()
+
+        group_own
+        |> GroupOwner.update_changeset(%{group_owners: new_owners})
+        |> Repo.update()
+    end
   end
 end

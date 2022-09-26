@@ -92,7 +92,7 @@ defmodule Exmock.Service.Friend do
 
         if Exmock.TimeUtil.now_sec() - ts <= ttl do
           User.been_friend(%{one_uid: uid, ano_uid: fid})
-          {:reply, {:ok, "success"}, state}
+          {:reply, {:ok, fid}, state}
         else
           {:reply, {:fail, "request expired"}, state}
         end
