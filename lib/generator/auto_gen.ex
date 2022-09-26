@@ -66,6 +66,17 @@ defmodule Exmock.AutoGen do
           |> :erlang.term_to_binary()
       }
     end
+
+    def new(id) do
+      user_info_data = %{uid: uid} = Exmock.AutoGen.UserInfoStructs.new(id)
+
+      %{
+        uid: uid,
+        data:
+          user_info_data
+          |> :erlang.term_to_binary()
+      }
+    end
   end
 
   defmodule UserInfoStructs do
@@ -77,6 +88,29 @@ defmodule Exmock.AutoGen do
         uid: uid,
         avatar: Faker.Avatar.image_url(),
         kingdom: Exmock.AutoGen.Kingdoms.new(uid),
+        guild: Exmock.AutoGen.Guilds.new(),
+        badge_url: "",
+        sub_title_list: Exmock.AutoGen.SubtitleLists.new(),
+        avatar_frame_url: "",
+        bubble_configs: Exmock.AutoGen.BubbleConfigs.new(),
+        vip_level: 0,
+        show_vip: false,
+        level: 10,
+        game_extra: "{}",
+        sex: 0,
+        emblem_urls: [],
+        create_time: Exmock.TimeUtil.now_sec(),
+        text_color: "#000000",
+        user_type: 0,
+        user_name: Faker.Person.name()
+      }
+    end
+
+    def new(id) do
+      %UserInfoStruct{
+        uid: id,
+        avatar: Faker.Avatar.image_url(),
+        kingdom: Exmock.AutoGen.Kingdoms.new(id),
         guild: Exmock.AutoGen.Guilds.new(),
         badge_url: "",
         sub_title_list: Exmock.AutoGen.SubtitleLists.new(),

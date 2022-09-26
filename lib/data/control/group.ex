@@ -10,8 +10,19 @@ defmodule Exmock.Data.Group do
 
   alias Exmock.EtsCache, as: Cache
   alias Exmock.Repo
+  import Ecto.Query
 
   @ttl :timer.hours(1)
+
+  def query_all_groups(page, page_size) do
+    query =
+      from group in GroupInfo,
+        limit: ^page_size,
+        offset: ^page
+
+
+    Repo.all(query)
+  end
 
   # 34340617639161856, 34431119105454080
   @decorate cacheable(cache: Cache, key: {GroupInfo, group_id}, opts: [ttl: @ttl])

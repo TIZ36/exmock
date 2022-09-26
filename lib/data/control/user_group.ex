@@ -17,7 +17,7 @@ defmodule Exmock.Data.UserGroup do
   """
   @decorate cache_evict(
               cache: Cache,
-              key: {UserGroupMappingU, uid}
+              keys: [{UserGroupMappingU, uid}, {UserGroupMappingG, gid}]
             )
   def user_join(gid, uid) when is_integer(gid) and is_integer(uid) do
     attrs = %{uid: uid, group_id: gid}
@@ -57,7 +57,15 @@ defmodule Exmock.Data.UserGroup do
     Repo.all(query)
   end
 
-  #  def get_group_users(gid) do
-  #    query = from ugm in
-  #  end
+  @decorate cache_evict(cache: Cache, keys: [{UserGroupMappingU, uid}, {UserGroupMappingG, gid}])
+  def del_user_group_mapping(gid, uid) do
+    query =
+      from ugm in UserGroupMapping,
+      where: ugm.uid == ^uid and ugm.group_id == ^gid,
+      select: ugm
+
+    query
+    |> Repo.one()
+    |> Repo.delete()
+  end
 end

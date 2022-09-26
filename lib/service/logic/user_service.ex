@@ -87,7 +87,7 @@ defmodule Exmock.Service.User do
   # 获取群组
   @decorate trans(params, [{"uid", :Integer}, {"language", :String}])
   def get("user.groups", params) do
-    no_panic "user.groups", fallback: fail(@unknown_err), use_throw: true do
+    no_panic "user.groups", fallback: fail(@ecode_service_reject), use_throw: true do
       re = UserGroup.query_user_groups(params["uid"])
 
       group_info_list =
@@ -159,22 +159,33 @@ defmodule Exmock.Service.User do
   end
 
   ### post ###
-  def post("user.create", _params) do
-    user_info = Exmock.AutoGen.UserInfo.new()
+  @decorate trans(params, [{"uid", :Integer}])
+  def post("user.create", params) do
+    no_panic "user.create", fallback: fail(@ecode_service_reject) do
+      uid = Map.get(params, "uid", nil)
 
-    case User.create_user(user_info) do
-      {:fail, reason} ->
-        Logger.error("user.create fail, reason: #{inspect(reason)}")
-        fail(@ecode_db_error)
+      %{uid: uid} = user_info =
+        if uid do
+          Exmock.AutoGen.UserInfo.new(uid)
+        else
+          Exmock.AutoGen.UserInfo.new()
+        end
 
-      {:ok,
-       %Exmock.Data.Schema.UserInfo{
-         data: data_bin
-       }} ->
-        ok(data: :erlang.binary_to_term(data_bin))
+      case User.create_user(user_info) do
+        {:fail, reason} ->
+          Logger.error("user.create fail, reason: #{inspect(reason)}")
+          fail(@ecode_db_error)
 
-      _ ->
-        fail(@unknown_err)
+        {:ok,
+          %Exmock.Data.Schema.UserInfo{
+            data: data_bin
+          }
+        } ->
+          User.create_user_basicinfo(%{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)})
+          ok(data: %{info: :erlang.binary_to_term(data_bin),basicinfo: %{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)}})
+        _ ->
+          fail(@unknown_err)
+      end
     end
   end
 

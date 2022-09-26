@@ -21,23 +21,35 @@ defmodule Exmock.Service.Group do
   """
   def get(_api, _params)
 
+  @decorate trans(params, [{"page", :Integer}, {"page_size", :Integer}])
+  def get("group.list", params) do
+    no_panic "group.list", fallback: [] do
+      page = max(params["page"] - 1, 0)
+      page_size = params["page_size"]
+      groups =  Group.query_all_groups(page, page_size)
+      ok(data: groups)
+    end
+  end
+
   @decorate trans(params, [{"groupId", :Integer}, {"language", :String}])
   def get("group.info", params) do
-    gid = params["groupId"]
+    no_panic "group_info", fallback: fail(@ecode_service_reject) do
+      gid = params["groupId"]
 
-    case Group.query_group_info_by_gid(gid) do
-      nil ->
-        fail(@ecode_not_found)
+      case Group.query_group_info_by_gid(gid) do
+        nil ->
+          fail(@ecode_not_found)
 
-      {:fail, _reason} ->
-        fail(@ecode_db_error)
+        {:fail, _reason} ->
+          fail(@ecode_db_error)
 
-      %GroupInfo{} = group_info_struct ->
-        group_info_map =
-          group_info_struct
-          |> DataType.TransProtocol.trans_out()
+        %GroupInfo{} = group_info_struct ->
+          group_info_map =
+            group_info_struct
+            |> DataType.TransProtocol.trans_out()
 
-        ok(data: group_info_map)
+          ok(data: group_info_map)
+      end
     end
   end
 
@@ -106,8 +118,8 @@ defmodule Exmock.Service.Group do
   end
 
   @decorate trans(param, [{"group_id", :Integer}, {"uid", :Integer}])
-  def post("group.user_join", param) do
-    no_panic "user_join", fallback: fail(@ecode_service_reject) do
+  def post("group.join", param) do
+    no_panic "join", fallback: fail(@ecode_service_reject) do
       gid = param["group_id"]
       uid = param["uid"]
 
@@ -123,6 +135,18 @@ defmodule Exmock.Service.Group do
 #      Exmock.Service.IMNotify.change_members_v2(0, %{add: [{gid, [uid]}]})
 
       ok(data: %{code: 200, msg: "success"})
+    end
+  end
+
+  @decorate trans(params, [{"group_id", :Integer}, {"uid", :Integer}])
+  def post("group.leave", params) do
+    no_panic "group.leave", fallback: fail(@ecode_service_reject) do
+      uid = params["uid"]
+      gid = params["group_id"]
+
+      UserGroup.del_user_group_mapping(gid, uid)
+
+      ok(data: %{})
     end
   end
 
