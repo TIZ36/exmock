@@ -169,7 +169,7 @@ defmodule Exmock.Data.User do
         |> Repo.insert()
 
       %_{black_state: bs} = user_blacklist_record ->
-        attrs = Map.put(user_blacklist_record, :black_state, bs ||| @blacked)
+        attrs = %{black_state: bs ||| @blacked}
 
         user_blacklist_record
         |> UserBlacklist.update_changeset(attrs)

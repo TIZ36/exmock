@@ -26,7 +26,7 @@ defmodule Exmock.Service.User do
 
   # 获取 user.basicinfo
   @decorate trans(params, [{"uid", :Integer}])
-  def get("basicinfo", params) do
+  def get("user.basicinfo", params) do
     case User.query_user_basicinfo_by_id(params["uid"]) do
       nil ->
         fail(@ecode_not_found)
@@ -51,7 +51,7 @@ defmodule Exmock.Service.User do
 
   #获取user.info
   @decorate trans(params, [{"uid", :Integer}, {"language", :String}])
-  def get("info", params) do
+  def get("user.info", params) do
     case User.query_user_info_by_id(params["uid"]) do
       nil ->
         fail(@ecode_not_found)
@@ -65,7 +65,7 @@ defmodule Exmock.Service.User do
     end
   end
 
-  def get("batchInfo", %{"users" => users_url_encoded} = _params) do
+  def get("user.batchInfo", %{"users" => users_url_encoded} = _params) do
     real_users =
       users_url_encoded
       |> URI.decode()
@@ -86,7 +86,7 @@ defmodule Exmock.Service.User do
 
   # 获取群组
   @decorate trans(params, [{"uid", :Integer}, {"language", :String}])
-  def get("groups", params) do
+  def get("user.groups", params) do
     no_panic "user.groups", fallback: fail(@unknown_err), use_throw: true do
       re = UserGroup.query_user_groups(params["uid"])
 
@@ -105,16 +105,16 @@ defmodule Exmock.Service.User do
     end
   end
 
-  def get("config.infoUI", _params) do
-  end
+#  def get("config.infoUI", _params) do
+#  end
 
   # def get("presence", %{"uids" => uids} = params) do
   # end
 
   # 获取好友
   @decorate trans(params, [{"uid", :Integer}, {"language", :String}])
-  def get("friends", params) do
-    no_panic "user.friends", fallback: fail(@unknown_err) do
+  def get("user.friends", params) do
+    no_panic "user.friends", fallback: fail(@ecode_service_reject) do
       re =
         User.query_user_friends(params["uid"])
         |> Enum.reduce([], fn uid, acc ->
@@ -137,7 +137,7 @@ defmodule Exmock.Service.User do
 
   # 获取黑名单数据
   @decorate trans(params, [{"uid", :Integer}])
-  def get("blacklist", params) do
+  def get("user.blacklist", params) do
     no_panic "blacklist", fallback: ok(data: []) do
       uid = params["uid"]
       blacklist = User.get_blacklist(uid)
@@ -150,15 +150,16 @@ defmodule Exmock.Service.User do
   # 好友相关
   #获取好友请求
   @decorate trans(params, [{"uid", :Integer}])
-  def get("friend_reqs", params) do
+  def get("user.friend_reqs", params) do
     no_panic "friend_reqs", fallback: fail(@unknown_err) do
-      uids = Exmock.Service.Friend.get_friend_reqs(params["uid"])
-      ok(data: uids)
+      uid = params["uid"]
+      requests = Exmock.Service.Friend.get_friend_reqs(uid)
+      ok(data: requests)
     end
   end
 
   ### post ###
-  def post("create", _params) do
+  def post("user.create", _params) do
     user_info = Exmock.AutoGen.UserInfo.new()
 
     case User.create_user(user_info) do
@@ -185,15 +186,18 @@ defmodule Exmock.Service.User do
   #  -> Exmock.RedisCache
   #
   @decorate trans(params, [{"from_uid", :Integer}, {"to_uid", :Integer}, {"msg", :String}])
-  def post("add_friend", params) do
-    no_panic "add_friend", fallback: fail(@unknown_err) do
+  def post("user.add_friend", params) do
+    no_panic "add_friend", fallback: fail(@ecode_service_reject) do
       from_uid = params["from_uid"]
       to_uid = params["to_uid"]
       msg = params["msg"]
 
+      User.query_user_info_by_id(to_uid)
+      User.query_user_info_by_id(from_uid)
+
       case Exmock.Service.Friend.add_friend_req(to_uid, from_uid, msg) do
-        :ok ->
-          ok(data: %{result: "success"})
+      {:ok, _request_id} ->
+          ok(data: %{})
 
         _ ->
           fail(@ecode_dup_req)
@@ -205,14 +209,14 @@ defmodule Exmock.Service.User do
   接受好友
   """
   @decorate trans(params, [{"uid", :Integer}, {"request_id", :String}])
-  def post("accept_friend", params) do
+  def post("user.accept_friend", params) do
     no_panic "accept_friend", fallback: fail(@unknown_err) do
       uid = params["uid"]
       request_id = params["request_id"]
 
       case Exmock.Service.Friend.accept_friend_req(uid, request_id) do
         {:ok, _} ->
-          ok(data: %{result: "success"})
+          ok(data: %{})
 
         {:fail, reason} ->
           Logger.error("#{inspect(reason)}")
@@ -223,14 +227,14 @@ defmodule Exmock.Service.User do
 
   # 删除好友，user.del_friend
   @decorate trans(params, [{"uid", :Integer}, {"fid", :Integer}])
-  def post("del_friend", params) do
-    no_panic "user.del_friend", fallback: fail(@unknown_err) do
+  def post("user.del_friend", params) do
+    no_panic "user.del_friend", fallback: fail(@ecode_service_reject) do
       uid = params["uid"]
       ano_uid = params["fid"]
 
       case User.del_friend(%{one_uid: uid, ano_uid: ano_uid}) do
         {:ok, _} ->
-          ok(data: %{result: "success"})
+          ok(data: %{})
 
         _ ->
           throw(fail(@ecode_db_error))
@@ -240,31 +244,30 @@ defmodule Exmock.Service.User do
 
   # 添加黑名单
   @decorate trans(params, [{"uid", :Integer}, {"black_uid", :Integer}])
-  def post("add_blacklist", params) do
-    no_panic "user.add_blacklist", fallback: fail(@unknown_err) do
+  def post("user.add_blacklist", params) do
+    no_panic "user.add_blacklist", fallback: fail(@ecode_service_reject) do
       uid = params["uid"]
       black_uid = params["black_uid"]
 
       User.add_blacklist(uid, black_uid)
+#      notify_im_change_blacklist(uid)
 
-      notify_im_change_blacklist(uid)
-
-      ok(data: %{result: "success"})
+      ok(data: %{})
     end
   end
 
   # 删除黑名单
   @decorate trans(params, [{"uid", :Integer}, {"black_uid", :Integer}])
-  def post("del_blacklist", params) do
+  def post("user.del_blacklist", params) do
     no_panic "user.del_blacklist", fallback: fail(@unknown_err) do
       uid = params["uid"]
       black_uid = params["black_uid"]
 
       User.rem_blacklist(uid, black_uid)
 
-      notify_im_change_blacklist(uid)
+#      notify_im_change_blacklist(uid)
 
-      ok(data: %{result: "success"})
+      ok(data: %{})
     end
   end
 

@@ -22,7 +22,7 @@ defmodule Exmock.Service.Group do
   def get(_api, _params)
 
   @decorate trans(params, [{"groupId", :Integer}, {"language", :String}])
-  def get("info", params) do
+  def get("group.info", params) do
     gid = params["groupId"]
 
     case Group.query_group_info_by_gid(gid) do
@@ -42,7 +42,7 @@ defmodule Exmock.Service.Group do
   end
 
   @decorate trans(params, [{"groupId", :Integer}, {"lanaguage", :String}])
-  def get("users", params) do
+  def get("group.users", params) do
     no_panic "group.users", fallback: fail(@unknown_err), use_throw: true do
       gid = params["groupId"]
 
@@ -69,7 +69,7 @@ defmodule Exmock.Service.Group do
   end
 
   @decorate trans(params, [{"groupId", :Integer}])
-  def get("config", params) do
+  def get("group.config", params) do
     no_panic "group.config", fallback: fail(@unknown_err) do
       case Group.query_group_config(params["groupId"]) do
         [] ->
@@ -87,8 +87,8 @@ defmodule Exmock.Service.Group do
   @doc """
   用于创建群组
   """
-  def post("create", %{"group_name" => gname} = params) do
-    group_sub_type = Map.get(params, "group_sub_type", 0)
+  def post("group.create", %{"group_name" => gname} = params) do
+    group_sub_type = Map.get(params, "group_sub_type", 0) |> String.to_integer()
     group_info_attrs = Exmock.AutoGen.Guilds.create_group(gname, group_sub_type)
 
     case Group.create_new_group_info(group_info_attrs) do
@@ -106,8 +106,8 @@ defmodule Exmock.Service.Group do
   end
 
   @decorate trans(param, [{"group_id", :Integer}, {"uid", :Integer}])
-  def post("user_join", param) do
-    no_panic "user_join", fallback: fail(@ecode_not_found), use_throw: true do
+  def post("group.user_join", param) do
+    no_panic "user_join", fallback: fail(@ecode_service_reject) do
       gid = param["group_id"]
       uid = param["uid"]
 
@@ -120,7 +120,7 @@ defmodule Exmock.Service.Group do
       UserGroup.user_join(gid, uid)
 
       # notify im server
-      Exmock.Service.IMNotify.change_members_v2(0, %{add: [{gid, [uid]}]})
+#      Exmock.Service.IMNotify.change_members_v2(0, %{add: [{gid, [uid]}]})
 
       ok(data: %{code: 200, msg: "success"})
     end

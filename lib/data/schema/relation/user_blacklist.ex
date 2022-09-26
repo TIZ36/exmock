@@ -33,7 +33,7 @@ defmodule Exmock.Data.Schema.UserBlacklist do
   def update_changeset(user_black, attrs) do
     user_black
     |> Ecto.Changeset.cast(attrs, [:one_uid, :ano_uid, :relate_hash, :black_state])
-    |> Ecto.Changeset.validate_required([:one_uid, :ano_uid, :black_state])
+    |> Ecto.Changeset.validate_required([:black_state])
   end
 
   @doc """

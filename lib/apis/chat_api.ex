@@ -20,24 +20,28 @@ defmodule Exmock.ChatApi do
   # user
   def dispatch_get("user", api, params) do
     no_panic "user.#{api}: params: #{inspect(params)}", fallback: @ecode_internal_err do
-      UserService.get(api, params)
+      full_path = "user.#{api}"
+      UserService.get(full_path, params)
     end
   end
   # group
   def dispatch_get("group", api, params) do
     no_panic "group.#{api}: params: #{inspect(params)}", fallback: @ecode_internal_err do
-      GroupService.get(api, params)
+      full_path = "group.#{api}"
+      GroupService.get(full_path, params)
     end
   end
 
   def dispatch_post("user", api, params) do
     no_panic "user.#{api}: params: #{inspect(params)}", fallback: @ecode_internal_err do
-      UserService.post(api, params)
+      full_path = "user.#{api}"
+      UserService.post(full_path, params)
     end
   end
   def dispatch_post("group", api, params) do
     no_panic "group.#{api}: params: #{inspect(params)}", fallback: @ecode_internal_err do
-      GroupService.post(api, params)
+      full_path = "group.#{api}"
+      GroupService.post(full_path, params)
     end
   end
 
@@ -51,7 +55,7 @@ defmodule Exmock.ChatApi do
 
         conn
         |> put_status(200)
-        |> json(out(resp))
+        |> json((resp))
 
       _ ->
         conn

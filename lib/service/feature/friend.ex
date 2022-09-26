@@ -31,11 +31,11 @@ defmodule Exmock.Service.Friend do
   """
   def add_friend_req(uid, from_uid, msg \\ "") do
     case produce_friend_req(uid, from_uid, msg) do
-      1 ->
-        :ok
+      {:ok, _request_id} =re ->
+        re
 
-      _ ->
-        :fail
+      {:fail, _reason} = re ->
+        re
     end
   end
 
@@ -119,10 +119,15 @@ defmodule Exmock.Service.Friend do
         timestamp: Exmock.TimeUtil.now_sec()
       })
 
-    RedisCache.command!(
+    case RedisCache.command!(
       uid,
       ["HSETNX", friend_request_cache_key, request_id, request_content]
-    )
+    ) do
+      1 ->
+        {:ok, request_id}
+      _ ->
+        {:fail, "already friend"}
+    end
   end
 
   def contains_friend_request?(uid, request_id) do
