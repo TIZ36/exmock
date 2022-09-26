@@ -16,6 +16,23 @@ defimpl DataType.TransProtocol, for: Exmock.Data.Schema.GroupConfig do
   end
 end
 
+defimpl DataType.TransProtocol, for: Exmock.Data.Schema.UserBasicInfo do
+  @user_basicinfo_fields_declare [
+    cur_stage: :Integer,
+    maincity_level: :Integer,
+    uid: :Integer
+  ]
+
+  def trans_out(user_basicinfo) do
+    user_basicinfo
+    |> Map.take(Keyword.keys(@user_basicinfo_fields_declare))
+  end
+
+  def trans_in(v) do
+    v
+  end
+end
+
 defimpl DataType.TransProtocol, for: Exmock.Data.Schema.UserInfo do
   @dta_user_info [
     uid: :Integer,

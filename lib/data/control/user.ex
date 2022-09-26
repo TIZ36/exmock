@@ -21,6 +21,16 @@ defmodule Exmock.Data.User do
   @ttl :timer.hours(1)
 
   # ====== table: basic_info, schema: Exmock.Data.Schema.UserBasicInfo  ======#
+  @decorate cache_put(
+              cache: Cache,
+              key: {UserBasicInfo, attrs.uid}
+            )
+  def create_user_basicinfo(attrs) do
+    %UserBasicInfo{}
+    |> UserBasicInfo.changeset(attrs)
+    |> Repo.insert!()
+  end
+
   @doc """
   查找user basic info， with cache
   """

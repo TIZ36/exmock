@@ -17,10 +17,24 @@ no_panic "service_name", fallback: {:error, "[panic rescued] <> #{inspect(trace}
 end
 
 ----   data  ----
-{:ok, data, type}: 如果该接口需要进行数据转换,  
-{:ok, data}: 简单数据 , 
-{:fail, "reason"}: 无数据，或其他正常的错误
-{:error, trace}: 用no_panic包住了（数据层不用自己写，service层封装好了该结构）
+集成了cache，所以有值返回该值 -> service_data.trans_out
+查询
+data: 查询到
+nil：没有查询到
+
+增
+full_data
+:fail
+
+改
+updated_data
+:fail
+
+删除
+:ok
+:fail
+
+
 
 
 HTTP-REQ   |                                             | DEMO
