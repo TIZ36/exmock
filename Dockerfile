@@ -17,7 +17,7 @@ RUN echo "MIX_ENV is ${MIX_ENV}"; \
 
 RUN source ~/.bashrc; \
     export DEBUG=1; \
-    cd /app && mix deps.get && mix deps.compile && mix.compile
+    cd /app && mix deps.get && mix deps.compile && mix compile
 
 EXPOSE 8888/tcp
 
