@@ -27,7 +27,6 @@ function do_start() {
     echo_eval elixir --name ${NODE} \
       --cookie ${COOKIE} \
       --no-halt \
-      --erl "-detached" \
       -S mix
   fi
 }
