@@ -1,5 +1,5 @@
 FROM lilith-registry.cn-shanghai.cr.aliyuncs.com/platform/immt_base:1.0.1
-ARG APP_VSN=
+ARG APP_VSN=v1
 ARG MIX_ENV=dev
 
 ENV HEX_MIRROR=http://hexpm.upyun.com
