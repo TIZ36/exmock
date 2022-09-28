@@ -3,6 +3,22 @@ defmodule Exmock.AutoGen do
   自动生成数据
   """
 
+  def gen_user(s, e) do
+    ids = :lists.seq(s, e)
+
+    Enum.each(ids, fn id ->
+      Exmock.Service.User.post("user.create", %{"uid" => id})
+    end)
+  end
+
+  def gen_group(s, e) do
+    ids = :lists.seq(s, e)
+
+    Enum.each(ids, fn id ->
+      Exmock.Service.Group.post("group.create", %{})
+    end)
+  end
+
   defmodule Kingdoms do
     @moduledoc false
     def new(id) do
