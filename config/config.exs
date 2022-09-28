@@ -1,10 +1,8 @@
 import Config
 
-
-base_config = Path.join(["..", "im_config_#{config_env()}.exs"])
-
+base_config =  Path.join(["config", "#{config_env()}.exs"])
 if File.exists?(base_config) do
-  import_config Path.join(["..", base_config])
+  import_config "#{config_env()}.exs"
 end
 
 config :exmock, Exmock.EtsCache,
