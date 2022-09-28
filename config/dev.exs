@@ -3,9 +3,9 @@ import Config
 # config mysql
 config :exmock, Exmock.Repo,
   database: "game_mock",
-  username: "root",
-  password: "0310",
-  hostname: "localhost",
+  username: "lilithop",
+  password: "Lilith_301",
+  hostname: "rm-uf6i5p2d2b9h2acnm.mysql.rds.aliyuncs.com",
   port: 3306,
   pool_size: 10,
   show_sensitive_data_on_connection_error: true
@@ -27,7 +27,7 @@ config :exmock, Exmock.EtsCache,
 
 config :exmock, Exmock.RedisCache,
   conn_opts: [
-    host: "127.0.0.1",
-    password: "123456",
+    host: "r-uf63x26gecho6stbtk.redis.rds.aliyuncs.com",
+    password: "iKCbzbffKxGB60Hxmbc",
     port: 6379
   ]

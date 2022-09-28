@@ -14,7 +14,7 @@ defmodule Exmock.AutoGen do
   def gen_group(s, e) do
     ids = :lists.seq(s, e)
 
-    Enum.each(ids, fn id ->
+    Enum.each(ids, fn _id ->
       Exmock.Service.Group.post("group.create", %{})
     end)
   end
