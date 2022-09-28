@@ -1,5 +1,12 @@
 import Config
 
+
+base_config = Path.join(["..", "im_config_#{config_env()}.exs"])
+
+if File.exists?(base_config) do
+  import_config Path.join(["..", base_config])
+end
+
 config :exmock, Exmock.EtsCache,
   # When using :shards as backend
   # backend: :shards,
@@ -13,8 +20,6 @@ config :exmock, Exmock.EtsCache,
   gc_cleanup_min_timeout: :timer.seconds(10),
   # GC max timeout: 10 min
   gc_cleanup_max_timeout: :timer.minutes(10)
-
-import_config "#{config_env()}.exs"
 
 config :exmock, ecto_repos: [Exmock.Repo]
 
