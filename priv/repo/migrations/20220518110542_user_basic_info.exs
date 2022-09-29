@@ -3,7 +3,7 @@ defmodule Exmock.Repo.Migrations.UserBasicInfo do
 
   def change do
     create table(:basic_info, primary_key: false) do
-      add :uid, :integer, primary_key: true
+      add :uid, :bigint, primary_key: true
       add :cur_stage, :integer
       add :maincity_level, :integer
 
