@@ -162,23 +162,27 @@ defmodule Exmock.Service.User do
   @decorate trans(params, [{"uid", :Integer}])
   def post("user.create", params) do
     no_panic "user.create", fallback: fail(@ecode_service_reject) do
-      uid = Map.get(params, "uid", nil)
+      input_uid = Map.get(params, "uid", nil)
 
-      %{uid: uid} = user_info =
-        if uid do
-          Exmock.AutoGen.UserInfo.new(uid)
+      user_info =
+        if input_uid do
+          Exmock.AutoGen.UserInfo.new(input_uid)
         else
           Exmock.AutoGen.UserInfo.new()
         end
 
-      case User.create_user(user_info) do
+      attrs = user_info |> Map.take([:uid, :data])
+
+      IO.inspect(attrs)
+      case User.create_user(attrs) do
         {:fail, reason} ->
           Logger.error("user.create fail, reason: #{inspect(reason)}")
           fail(@ecode_db_error)
 
         {:ok,
           %Exmock.Data.Schema.UserInfo{
-            data: data_bin
+            data: data_bin,
+            uid: uid
           }
         } ->
           User.create_user_basicinfo(%{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)})
