@@ -5,7 +5,7 @@ defmodule Exmock.Repo.Migrations.UserFriend do
     create table(:user_friend, primary_key: false) do
       add :one_uid, :bigint
       add :ano_uid, :bigint
-      add :relate_hash, :string, primary_key: true
+      add :relate_hash, :string
 
       timestamps
     end
