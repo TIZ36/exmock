@@ -51,9 +51,15 @@ defmodule Exmock.Service.Friend do
   获取好友请求列表
   """
   def get_friend_reqs(uid) do
-    key = friend_request_key(uid)
+    hash_table_key = friend_request_key(uid)
 
-    RedisCache.command!(["HKEYS", key])
+    req_keys = RedisCache.command!(["HKEYS", hash_table_key])
+    RedisCache.command!(["HMGET", hash_table_key, req_keys])
+    |> Enum.map(&(Jason.decode!(&1)))
+    |> Enum.filter(fn %{"timestamp" => ts, "ttl" => ttl} ->
+      Exmock.TimeUtil.now_sec() - ts < ttl
+    end)
+    |> Enum.map(&(&1 |> Map.take(["from_uid", "request_id", "request_msg"])))
   end
 
   @doc """
