@@ -54,12 +54,19 @@ defmodule Exmock.Service.Friend do
     hash_table_key = friend_request_key(uid)
 
     req_keys = RedisCache.command!(["HKEYS", hash_table_key])
-    RedisCache.command!(["HMGET", hash_table_key, req_keys])
-    |> Enum.map(&(Jason.decode!(&1)))
-    |> Enum.filter(fn %{"timestamp" => ts, "ttl" => ttl} ->
-      Exmock.TimeUtil.now_sec() - ts < ttl
-    end)
-    |> Enum.map(&(&1 |> Map.take(["from_uid", "request_id", "request_msg"])))
+    case req_keys do
+      [] ->
+        req_keys
+      _ ->
+        RedisCache.command!(["HMGET", hash_table_key, req_keys])
+        |> Enum.map(&(Jason.decode!(&1)))
+        |> Enum.filter(
+              fn %{"timestamp" => ts, "ttl" => ttl} ->
+                Exmock.TimeUtil.now_sec() - ts < ttl
+              end)
+        |> Enum.map(&(&1 |> Map.take(["from_uid", "request_id", "request_msg"])))
+    end
+
   end
 
   @doc """
