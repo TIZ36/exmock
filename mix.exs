@@ -49,9 +49,11 @@ defmodule Exmock.MixProject do
       {:telemetry, "~> 1.0"},
 
       # redis
-      {:nebulex_redis_adapter, "~> 2.2.0"}
+      {:nebulex_redis_adapter, "~> 2.2.0"},
 #      {:crc, "~> 0.10"},    #=> Needed when using Redis Cluster
 #      {:jchash, "~> 0.1.2"} #=> Needed when using consistent-hashing
+
+      {:expower, git: "ssh://git@gitlab.lilithgame.com/BaoOnHead/expower.git", branch: "main"}
     ]
   end
 end
