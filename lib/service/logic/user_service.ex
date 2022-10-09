@@ -91,7 +91,8 @@ defmodule Exmock.Service.User do
       re = UserGroup.query_user_groups(params["uid"])
 
       # 所有人都在global room 和 alliance 里面
-      re = re ++ [1, 2]
+      re = (re ++ [1, 2]) |> Enum.uniq()
+
       group_info_list =
         Enum.reduce(re, [], fn gid, acc ->
           case Group.query_group_info_by_gid(gid) do
