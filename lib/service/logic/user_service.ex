@@ -90,6 +90,8 @@ defmodule Exmock.Service.User do
     no_panic "user.groups", fallback: fail(@ecode_service_reject), use_throw: true do
       re = UserGroup.query_user_groups(params["uid"])
 
+      # 所有人都在global room 和 alliance 里面
+      re = re ++ [1, 2]
       group_info_list =
         Enum.reduce(re, [], fn gid, acc ->
           case Group.query_group_info_by_gid(gid) do

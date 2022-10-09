@@ -31,7 +31,7 @@ defmodule Exmock.Data.Group do
     Repo.get!(GroupInfo, group_id)
   end
 
-  @decorate cacheable(cache: Cache, key: {GroupInfo, attrs.group_id}, opts: [ttl: @ttl])
+  @decorate cache_evict(cache: Cache, key: {GroupInfo, attrs.group_id}, opts: [ttl: @ttl])
   def update_group_info(%{group_id: gid} = attrs) do
     old_group_info = query_group_info_by_gid(gid)
 

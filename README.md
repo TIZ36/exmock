@@ -1,5 +1,13 @@
 # exmock
+```elixir
+#使用该服务器前需要初始化一些数据
 
+Exmock.AutoGen.gen_user 0, 300
+Exmock.AutoGen.create_persist_global_and_alli()
+
+
+
+```
 a game mocker server for im-erlang by using elixir-maru framework
 
 ---

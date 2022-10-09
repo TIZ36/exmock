@@ -4,8 +4,8 @@ import Config
 config :exmock, Exmock.Repo,
        database: "game_mock",
        username: "root",
-       password: "YjVy4pCIU92c5zlwau",
-       hostname: "rm-uf6fcmw3q91wb2852.mysql.rds.aliyuncs.com",
+       password: "0310",
+       hostname: "127.0.0.1",
        port: 3306,
        pool_size: 10,
        show_sensitive_data_on_connection_error: true
@@ -28,7 +28,7 @@ config :exmock, Exmock.EtsCache,
 
 config :exmock, Exmock.RedisCache,
        conn_opts: [
-         host: "r-uf63x26gecho6stbtk.redis.rds.aliyuncs.com",
-         password: "iKCbzbffKxGB60Hxmbc",
+         host: "127.0.0.1",
+         password: "123456",
          port: 6379
        ]

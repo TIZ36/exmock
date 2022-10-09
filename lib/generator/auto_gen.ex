@@ -3,6 +3,8 @@ defmodule Exmock.AutoGen do
   自动生成数据
   """
 
+  use Exmock.Const
+
   def gen_user(s, e) do
     ids = :lists.seq(s, e)
 
@@ -17,6 +19,36 @@ defmodule Exmock.AutoGen do
     Enum.each(ids, fn _id ->
       Exmock.Service.Group.post("group.create", %{})
     end)
+  end
+
+  @doc """
+  创建测试环境大家都在的世界频道 1 和联盟频道 2
+  """
+  def create_persist_global_and_alli() do
+    global_conv = %{
+      group_id: 1,
+      group_avatar: Exmock.Default.kingdom(1) |> Map.get(:avatar_url),
+      group_name: "Kingdom",
+      group_sub_type: 0,
+      group_type: @group_type_room,
+      manager_list: "[]",
+      server_id: "1",
+      at_all_per_day: 100
+    }
+
+    alli = %{
+      group_id: 2,
+      group_avatar: Faker.Avatar.image_url(),
+      group_name: "House",
+      group_sub_type: 0,
+      group_type: @group_type_group,
+      manager_list: "[]",
+      server_id: "1",
+      at_all_per_day: 100
+    }
+
+    Exmock.Data.Group.create_new_group_info(global_conv)
+    Exmock.Data.Group.create_new_group_info(alli)
   end
 
   defmodule Kingdoms do

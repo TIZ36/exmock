@@ -99,8 +99,9 @@ defmodule Exmock.Service.Group do
   @doc """
   用于创建群组
   """
+  @decorate trans(params, [{"group_name", :String}, {"group_sub_type", :Integer}])
   def post("group.create", params) do
-    group_sub_type = Map.get(params, "group_sub_type", "0") |> String.to_integer()
+    group_sub_type = Map.get(params, "group_sub_type", 0)
     gname = Map.get(params, "group_name", Faker.Company.name())
     group_info_attrs = Exmock.AutoGen.Guilds.create_group(gname, group_sub_type)
 

@@ -8,8 +8,10 @@ defmodule Exmock.Resp do
       use Exmock.Const
 
       import Exmock.Guards
+      require Logger
 
       def resp(code, data) do
+        Logger.info("#{inspect(data)}")
         if code == @resp_code_ok do
           %{
             code: code,
