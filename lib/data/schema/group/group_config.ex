@@ -13,25 +13,35 @@ defmodule Exmock.Data.Schema.GroupConfig do
 
   def new_changeset(group_config, attrs) do
     group_config
-    |> Ecto.Changeset.cast(attrs, [
-      :group_id,
-      :positions
-    ])
-    |> Ecto.Changeset.validate_required([
-      :group_id,
-      :postions
-    ])
+    |> Ecto.Changeset.cast(
+         attrs,
+         [
+           :group_id,
+           :positions
+         ]
+       )
+    |> Ecto.Changeset.validate_required(
+         [
+           :group_id,
+           :postions
+         ]
+       )
   end
 
   def update_changeset(group_config, attrs) do
     group_config
-    |> Ecto.Changeset.cast(attrs, [
-      :group_id,
-      :positions
-    ])
-    |> Ecto.Changeset.validate_required([
-      :group_id,
-      :postions
-    ])
+    |> Ecto.Changeset.cast(
+         attrs,
+         [
+           :group_id,
+           :positions
+         ]
+       )
+    |> Ecto.Changeset.validate_required(
+         [
+           :group_id,
+           :postions
+         ]
+       )
   end
 end

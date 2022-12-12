@@ -37,7 +37,9 @@ defmodule Exmock.Data.User do
   @decorate cacheable(
               cache: Cache,
               key: {UserBasicInfo, uid},
-              opts: [ttl: @ttl]
+              opts: [
+                ttl: @ttl
+              ]
             )
   def query_user_basicinfo_by_id(uid) do
     Repo.get!(UserBasicInfo, uid)
@@ -68,7 +70,9 @@ defmodule Exmock.Data.User do
   @decorate cacheable(
               cache: Cache,
               key: {UserInfo, uid},
-              opts: [ttl: @ttl]
+              opts: [
+                ttl: @ttl
+              ]
             )
   def query_user_info_by_id(uid) do
     Repo.get!(UserInfo, uid)
@@ -79,7 +83,8 @@ defmodule Exmock.Data.User do
   """
   def batch_query_user_info_by_ids(uids) do
     query =
-      from(u in UserInfo,
+      from(
+        u in UserInfo,
         where: u.uid in ^uids,
         select: u.data
       )
@@ -108,11 +113,14 @@ defmodule Exmock.Data.User do
   @decorate cacheable(
               cache: Cache,
               key: {UserFriend, uid},
-              opts: [ttl: @ttl]
+              opts: [
+                ttl: @ttl
+              ]
             )
   def query_user_friends(uid) do
     query =
-      from(uf in UserFriend,
+      from(
+        uf in UserFriend,
         where: uf.one_uid == ^uid or uf.ano_uid == ^uid,
         select: uf
       )
@@ -124,13 +132,15 @@ defmodule Exmock.Data.User do
     Logger.info("#{inspect(v)}")
 
     v
-    |> Enum.map(fn
-      %_{one_uid: ^uid, ano_uid: fid} ->
-        fid
+    |> Enum.map(
+         fn
+           %_{one_uid: ^uid, ano_uid: fid} ->
+             fid
 
-      %_{one_uid: fid, ano_uid: ^uid} ->
-        fid
-    end)
+           %_{one_uid: fid, ano_uid: ^uid} ->
+             fid
+         end
+       )
   end
 
   @doc """
@@ -154,7 +164,8 @@ defmodule Exmock.Data.User do
             )
   def add_blacklist(uid, blacked_uid) do
     query =
-      from(ubl in UserBlacklist,
+      from(
+        ubl in UserBlacklist,
         where: ubl.one_uid == ^uid and ubl.ano_uid == ^blacked_uid,
         select: ubl
       )
@@ -183,7 +194,8 @@ defmodule Exmock.Data.User do
             )
   def rem_blacklist(uid, blacked_uid) do
     query =
-      from(ubl in UserBlacklist,
+      from(
+        ubl in UserBlacklist,
         where:
           ubl.one_uid == ^uid and ubl.ano_uid == ^blacked_uid and ubl.black_state == @blacked,
         select: ubl
@@ -205,11 +217,14 @@ defmodule Exmock.Data.User do
   @decorate cacheable(
               cache: Cache,
               key: {UserBlacklist, uid},
-              opts: [ttl: @ttl]
+              opts: [
+                ttl: @ttl
+              ]
             )
   def get_blacklist(uid) do
     query =
-      from(ubl in UserBlacklist,
+      from(
+        ubl in UserBlacklist,
         where: ubl.one_uid == ^uid and ubl.black_state == @blacked,
         select: ubl.ano_uid
       )
@@ -221,11 +236,14 @@ defmodule Exmock.Data.User do
   @decorate cacheable(
               cache: Cache,
               key: {UserBlackedlist, uid},
-              opt: [ttl: @ttl]
+              opt: [
+                ttl: @ttl
+              ]
             )
   def get_blacked_list(uid) do
     query =
-      from(ubl in UserBlacklist,
+      from(
+        ubl in UserBlacklist,
         where: ubl.ano_uid == ^uid and ubl.black_state == @blacked,
         select: ubl.one_uid
       )

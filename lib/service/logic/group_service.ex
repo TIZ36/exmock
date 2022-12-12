@@ -26,7 +26,7 @@ defmodule Exmock.Service.Group do
     no_panic "group.list", fallback: [] do
       page = max(params["page"] - 1, 0)
       page_size = params["page_size"]
-      groups =  Group.query_all_groups(page, page_size)
+      groups = Group.query_all_groups(page, page_size)
       ok(data: groups)
     end
   end
@@ -76,7 +76,8 @@ defmodule Exmock.Service.Group do
           end
         end)
 
-      ok(data: group_user_info_list)
+      # im-erlang 特殊的解析规则
+      ok(data: %{"list" => group_user_info_list})
     end
   end
 
@@ -86,10 +87,12 @@ defmodule Exmock.Service.Group do
       case Group.query_group_config(params["groupId"]) do
         [] ->
           ok(data: [])
+
         %Exmock.Data.Schema.GroupConfig{} = group_config ->
           data = DataType.TransProtocol.trans_out(group_config)
 
           ok(data: data)
+
         _ ->
           fail(@ecode_db_error)
       end
@@ -158,5 +161,4 @@ defmodule Exmock.Service.Group do
       ok(data: %{})
     end
   end
-
 end

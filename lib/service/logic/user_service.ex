@@ -49,7 +49,7 @@ defmodule Exmock.Service.User do
     end
   end
 
-  #获取user.info
+  # 获取user.info
   @decorate trans(params, [{"uid", :Integer}, {"language", :String}])
   def get("user.info", params) do
     case User.query_user_info_by_id(params["uid"]) do
@@ -108,8 +108,8 @@ defmodule Exmock.Service.User do
     end
   end
 
-#  def get("config.infoUI", _params) do
-#  end
+  #  def get("config.infoUI", _params) do
+  #  end
 
   # def get("presence", %{"uids" => uids} = params) do
   # end
@@ -151,7 +151,7 @@ defmodule Exmock.Service.User do
   end
 
   # 好友相关
-  #获取好友请求
+  # 获取好友请求
   @decorate trans(params, [{"uid", :Integer}])
   def get("user.friend_reqs", params) do
     no_panic "friend_reqs", fallback: fail(@unknown_err) do
@@ -177,19 +177,25 @@ defmodule Exmock.Service.User do
       attrs = user_info |> Map.take([:uid, :data])
 
       IO.inspect(attrs)
+
       case User.create_user(attrs) do
         {:fail, reason} ->
           Logger.error("user.create fail, reason: #{inspect(reason)}")
           fail(@ecode_db_error)
 
         {:ok,
-          %Exmock.Data.Schema.UserInfo{
-            data: data_bin,
-            uid: uid
-          }
-        } ->
+         %Exmock.Data.Schema.UserInfo{
+           data: data_bin,
+           uid: uid
+         }} ->
           User.create_user_basicinfo(%{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)})
-          ok(data: %{info: :erlang.binary_to_term(data_bin),basicinfo: %{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)}})
+
+          ok(
+            data: %{
+              info: :erlang.binary_to_term(data_bin),
+              basicinfo: %{uid: uid, cur_stage: 1, maincity_level: rem(uid, 100)}
+            }
+          )
 
         _ ->
           fail(@unknown_err)
@@ -215,7 +221,7 @@ defmodule Exmock.Service.User do
       User.query_user_info_by_id(from_uid)
 
       case Exmock.Service.Friend.add_friend_req(to_uid, from_uid, msg) do
-      {:ok, _request_id} ->
+        {:ok, _request_id} ->
           ok(data: %{})
 
         _ ->
@@ -295,6 +301,7 @@ defmodule Exmock.Service.User do
   def notify_im_change_relation(uid, target_uids, ope) do
     Exmock.Service.IMNotify.change_relation(uid, target_uids, ope)
   end
+
   def notify_im_change_blacklist(uid) do
     blacklist = User.get_blacklist(uid)
     blackedlist = User.get_blacked_list(uid)
